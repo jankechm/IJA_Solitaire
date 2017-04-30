@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -7,7 +8,7 @@ import java.util.Stack;
  *
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeTargetPack extends AbstractKlondikeStacker implements TargetPack {
+public class KlondikeTargetPack extends AbstractKlondikeStacker implements Serializable, TargetPack {
   protected Stack<Card> cards;
   
   public KlondikeTargetPack() {

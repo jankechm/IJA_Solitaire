@@ -1,5 +1,15 @@
 package game;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import model.KlondikeCardDeck;
@@ -12,12 +22,12 @@ import model.KlondikeWorkingPack;
  *
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeGame {
+public class KlondikeGame implements Serializable {
   protected static final int WORKING_P_NUM = 7;
   protected static final int TARGET_P_NUM = 4;
-  /**Počítadlo her*/
+  /**Počítadlo všech spuštěných her*/
   public static int gameCnt = 0;
-  
+  /**ID současné hry*/
   public int gameId;
   public KlondikeFactory factory;
   public KlondikeCardDeck deck;
@@ -34,18 +44,18 @@ public class KlondikeGame {
    */
   public boolean newGame() {
     if (gameCnt < 4) {
-      factory = new KlondikeFactory();
-      deck = (KlondikeCardDeck)factory.createCardDeck();
-      workingP = new ArrayList<>();
+      this.factory = new KlondikeFactory();
+      this.deck = (KlondikeCardDeck)factory.createCardDeck();
+      this.workingP = new ArrayList<>();
       for (int i = 0; i < WORKING_P_NUM; i++) {
-        workingP.add(i, (KlondikeWorkingPack)factory.createWorkingPack(deck, i+1));
+        this.workingP.add(i, (KlondikeWorkingPack)factory.createWorkingPack(deck, i+1));
       }
-      targetP = new ArrayList<>();
+      this.targetP = new ArrayList<>();
       for (int i = 0; i < TARGET_P_NUM; i++) {
-        targetP.add(i, (KlondikeTargetPack)factory.createTargetPack());
+        this.targetP.add(i, (KlondikeTargetPack)factory.createTargetPack());
       }
-      stock = (KlondikeStock)factory.createStock(deck);
-      waste = stock.getWaste();
+      this.stock = (KlondikeStock)factory.createStock(deck);
+      this.waste = stock.getWaste();
       gameCnt++;
       this.gameId = gameCnt;
       return true;
@@ -58,19 +68,71 @@ public class KlondikeGame {
    * Ukončí hru.
    */
   public void quitGame() {
-    factory = null;
-    deck = null;
-    workingP = null;
-    targetP = null;
-    stock = null;
-    waste = null;
+    this.factory = null;
+    this.deck = null;
+    this.workingP = null;
+    this.targetP = null;
+    this.stock = null;
+    this.waste = null;
     gameCnt--;
   }
   /**
-   * Uloží hru.
+   * Uloží stav hry na disk.
+   * Jako název souboru s uloženým stavem hry se použije aktuální datum a čas.
+   * @return název souboru s uloženou hrou
    */
-  public void saveGame() {
+  public String saveGame() {
+    //Aktuální datum a čas jako název souboru pro uložení
+    LocalDateTime dateTime = LocalDateTime.now();
+    String fileName = dateTime.format(DateTimeFormatter.ofPattern("d-M-y_H-m-ss"));
     
+		try (FileOutputStream fo = new FileOutputStream(new File(fileName));
+         ObjectOutputStream oo = new ObjectOutputStream(fo)) {
+      //Uložení stavu hry do souboru
+      oo.writeObject(this.deck);
+      oo.writeObject(this.stock);
+      oo.writeObject(this.waste);
+      oo.writeObject(this.workingP);
+      oo.writeObject(this.targetP);
+		}
+    catch (FileNotFoundException e) {
+			System.err.println("Výstupní soubor nenalezen");
+      return null;
+		}
+    catch (IOException e) {
+			System.err.println("Chyba inicializace výstupního proudu");
+      return null;
+		}
+    return fileName;
+  }
+  /**
+   * Načte uloženou hru z disku.
+   * @param fileName - název souboru
+   * @return 
+   */
+  public boolean loadGame(String fileName) {
+    try (FileInputStream fi = new FileInputStream(new File(fileName));
+         ObjectInputStream oi = new ObjectInputStream(fi)) {
+      //Načtení stavu hry ze souboru
+      this.deck = (KlondikeCardDeck)oi.readObject();
+      this.stock = (KlondikeStock)oi.readObject();
+      this.waste = (KlondikeWaste)oi.readObject();
+      this.workingP = (ArrayList<KlondikeWorkingPack>)oi.readObject();
+      this.targetP = (ArrayList<KlondikeTargetPack>)oi.readObject();
+    }
+    catch (FileNotFoundException e) {
+			System.err.println("Vstupní soubor nenalezen");
+      return false;
+		}
+    catch (IOException e) {
+			System.err.println("Chyba inicializace vstupního proudu");
+      return false;
+		}
+    catch (ClassNotFoundException e) {
+			System.err.println("Třída nenalezena.");
+      return false;
+		}
+    return true;
   }
   /**
    * Vrací počet rozehratých her.

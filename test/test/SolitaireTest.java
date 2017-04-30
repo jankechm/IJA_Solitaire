@@ -21,7 +21,7 @@ import org.junit.Test;
  * IJA 2016/2017: Testovaci trida pro ukol c. 2.
  * @author koci
  */
-public class HomeWork2Test {
+public class SolitaireTest {
     
     protected KlondikeFactory factory;
 
@@ -179,7 +179,9 @@ public class HomeWork2Test {
     @Test
     public void testGame() {
         KlondikeGame game = new KlondikeGame();
+        Card c1 = factory.createCard(Card.Color.DIAMONDS, 11);
         int cardNum = 0;
+        String fileName;
         
         game.newGame();
 
@@ -200,5 +202,14 @@ public class HomeWork2Test {
         game.quitGame();
         
         Assert.assertEquals("Pocet rozehratých her je 0", 0, KlondikeGame.getGameCnt());
+        
+        game.newGame();
+        fileName = game.saveGame();
+        //System.out.println("Filename: " + fileName);
+        Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
+        game.workingP.get(0).pop();
+        Assert.assertEquals("Pocet karet v prac. balíku 1 je 0", 0, game.workingP.get(0).size());
+        game.loadGame(fileName);
+        Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
     }
 }

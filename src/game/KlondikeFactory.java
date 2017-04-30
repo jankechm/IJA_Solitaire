@@ -1,5 +1,6 @@
 package game;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
 import model.*;
@@ -8,7 +9,7 @@ import model.*;
  *
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeFactory {
+public class KlondikeFactory implements Serializable {
   protected static final int STD_DECK_SIZE = 52;
   protected static final int CASCADE_SIZE = 13;
   protected static final int STD_STOCK_SIZE = 24;

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -7,7 +8,7 @@ import java.util.Stack;
  * Zásobník karet potáhnutých z kopky.
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeWaste extends AbstractKlondikeStacker {
+public class KlondikeWaste extends AbstractKlondikeStacker implements Serializable {
   protected Stack<Card> cards;
   
   public KlondikeWaste() {

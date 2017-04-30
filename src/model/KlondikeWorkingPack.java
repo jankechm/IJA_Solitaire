@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Stack;
 
 /**
  *
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeWorkingPack implements WorkingPack {
+public class KlondikeWorkingPack implements WorkingPack, Serializable {
   protected int initSize;
   protected Stack<Card> cards;
   

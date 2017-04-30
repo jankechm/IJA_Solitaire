@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Marek
  */
-public class KlondikeCard implements Card {
+public class KlondikeCard implements Serializable, Card {
   private Card.Color color;
   private int value;
   private boolean turnedFaceUp = false;

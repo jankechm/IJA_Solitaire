@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -7,7 +8,7 @@ import java.util.Stack;
  * Kopka karet obrácených rubem nahoru.
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeStock extends AbstractKlondikeStacker {
+public class KlondikeStock extends AbstractKlondikeStacker implements Serializable {
   protected static final int STD_STOCK_SIZE = 24;
   
   protected Stack<Card> cards;

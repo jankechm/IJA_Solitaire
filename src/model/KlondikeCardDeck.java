@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
@@ -11,7 +12,7 @@ import java.util.Stack;
  *
  * @author Marek
  */
-public class KlondikeCardDeck implements CardDeck {
+public class KlondikeCardDeck implements CardDeck, Serializable{
   protected static final int STD_DECK_SIZE = 52;
   protected static final int SAME_COLORED_MAX = 13;
 
