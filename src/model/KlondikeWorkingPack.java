@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Stack;
 
 /**
- *
+ * Třída reprezentující pracovní balíček.
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeWorkingPack implements WorkingPack, Serializable {

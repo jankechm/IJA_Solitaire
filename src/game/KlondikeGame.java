@@ -26,15 +26,15 @@ public class KlondikeGame implements Serializable {
   protected static final int WORKING_P_NUM = 7;
   protected static final int TARGET_P_NUM = 4;
   /**Počítadlo všech spuštěných her*/
-  public static int gameCnt = 0;
+  protected static int gameCnt = 0;
   /**ID současné hry*/
-  public int gameId;
-  public KlondikeFactory factory;
-  public KlondikeCardDeck deck;
-  public KlondikeStock stock;
-  public KlondikeWaste waste;
-  public ArrayList<KlondikeWorkingPack> workingP;
-  public ArrayList<KlondikeTargetPack> targetP;
+  protected int gameId;
+  protected KlondikeFactory factory;
+  protected KlondikeCardDeck deck;
+  protected KlondikeStock stock;
+  protected KlondikeWaste waste;
+  protected ArrayList<KlondikeWorkingPack> workingP;
+  protected ArrayList<KlondikeTargetPack> targetP;
   
   /**
    * Založí novou hru.
@@ -140,5 +140,48 @@ public class KlondikeGame implements Serializable {
    */
   public static int getGameCnt() {
     return gameCnt;
+  }
+  /**
+   * Vrací instanci zdrojového balíčku karet.
+   * @return instance balíčku karet.
+   */
+  public KlondikeCardDeck getDeck() {
+    return this.deck;
+  }
+  /**
+   * Vrací instanci pracovního balíčku karet.
+   * @param index - index prac. balíčku, číslovaný od 0
+   * @return instance prac. balíčku
+   */
+  public KlondikeWorkingPack getWorkingPack(int index) {
+    if (index > this.workingP.size() - 1) {
+      return null;
+    }
+    return this.workingP.get(index);
+  }
+  /**
+   * Vrací instanci zdrojového balíčku karet.
+   * @param index - index zdroj. balíčku, číslovaný od 0
+   * @return instance zdroj. balíčku
+   */
+  public KlondikeTargetPack getTargetPack(int index) {
+    if (index > this.targetP.size() - 1) {
+      return null;
+    }
+    return this.targetP.get(index);
+  }
+  /**
+   * Vrací instanci stock balíčku.
+   * @return instance stock balíčku.
+   */
+  public KlondikeStock getStock() {
+    return this.stock;
+  }
+  /**
+   * Vrací instanci waste stacku.
+   * @return 
+   */
+  public KlondikeWaste getWaste() {
+    return this.waste;
   }
 }

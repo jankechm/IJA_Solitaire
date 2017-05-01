@@ -186,17 +186,17 @@ public class SolitaireTest {
         game.newGame();
 
         for (int i = 0; i < 7; i++) {
-          Assert.assertEquals("Pocet karet v pracovním balíčku " + String.valueOf(i+1) + " je " + game.workingP.get(i).size(), i+1, game.workingP.get(i).size());
-          cardNum += game.workingP.get(i).size();
+          Assert.assertEquals("Pocet karet v pracovním balíčku " + String.valueOf(i) + " je " + String.valueOf(i+1), i+1, game.getWorkingPack(i).size());
+          cardNum += game.getWorkingPack(i).size();
         }
         Assert.assertEquals("Počet karet je ve všech prac. bal. dokopy 28", 28, cardNum);
         for (int i = 0; i < 4; i++) {
-          Assert.assertTrue("Cílové balíčky jsou prázdné", game.targetP.get(i).isEmpty());
+          Assert.assertTrue("Cílové balíčky jsou prázdné", game.getTargetPack(i).isEmpty());
         }
-        Assert.assertNotNull("Stock není null", game.stock);
-        Assert.assertEquals("Pocet karet v stock je 24", 24, game.stock.size());
-        Assert.assertEquals("Pocet karet ve waste je 0", 0, game.waste.size());
-        Assert.assertTrue("Zdrojový balíček deck je prázdný", game.deck.isEmpty());
+        Assert.assertNotNull("Stock není null", game.getStock());
+        Assert.assertEquals("Pocet karet v stock je 24", 24, game.getStock().size());
+        Assert.assertEquals("Pocet karet ve waste je 0", 0, game.getWaste().size());
+        Assert.assertTrue("Zdrojový balíček deck je prázdný", game.getDeck().isEmpty());
         Assert.assertEquals("Pocet rozehratých her je 1", 1, KlondikeGame.getGameCnt());
         
         game.quitGame();
@@ -207,16 +207,16 @@ public class SolitaireTest {
         fileName = game.saveGame();
         //System.out.println("Filename: " + fileName);
         
-        Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
-        Assert.assertEquals("Pocet karet v stock je 24", 24, game.stock.size());
-        game.workingP.get(0).pop();
-        game.stock.pop();
-        Assert.assertEquals("Pocet karet v prac. balíku 1 je 0", 0, game.workingP.get(0).size());
-        Assert.assertEquals("Pocet karet v stock je 23", 23, game.stock.size());
+        Assert.assertEquals("Pocet karet v prac. balíku 0 je 1", 1, game.getWorkingPack(0).size());
+        Assert.assertEquals("Pocet karet v stock je 24", 24, game.getStock().size());
+        game.getWorkingPack(0).pop();
+        game.getStock().pop();
+        Assert.assertEquals("Pocet karet v prac. balíku 1 je 0", 0, game.getWorkingPack(0).size());
+        Assert.assertEquals("Pocet karet v stock je 23", 23, game.getStock().size());
         
         game.loadGame(fileName);
         
-        Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
-        Assert.assertEquals("Pocet karet v stock je 24", 24, game.stock.size());
+        Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.getWorkingPack(0).size());
+        Assert.assertEquals("Pocet karet v stock je 24", 24, game.getStock().size());
     }
 }
