@@ -206,10 +206,17 @@ public class SolitaireTest {
         game.newGame();
         fileName = game.saveGame();
         //System.out.println("Filename: " + fileName);
+        
         Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
+        Assert.assertEquals("Pocet karet v stock je 24", 24, game.stock.size());
         game.workingP.get(0).pop();
+        game.stock.pop();
         Assert.assertEquals("Pocet karet v prac. balíku 1 je 0", 0, game.workingP.get(0).size());
+        Assert.assertEquals("Pocet karet v stock je 23", 23, game.stock.size());
+        
         game.loadGame(fileName);
+        
         Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.workingP.get(0).size());
+        Assert.assertEquals("Pocet karet v stock je 24", 24, game.stock.size());
     }
 }

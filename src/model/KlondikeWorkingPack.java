@@ -118,6 +118,20 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
     return false;
   }
   /**
+   * Vrací kartu nazpět do tohoto balíčku, po neúspěšném přesunu.
+   * @param card - vrácená karta
+   */
+  public void pushBack(Card card) {
+    this.cards.push(card);
+  }
+  /**
+   * Vrací karty nazpět do tohoto balíčku, po neúspěšném přesunu.
+   * @param cards - vrácené karty
+   */
+  public void pushBack(Stack<Card> cards) {
+    this.cards.addAll(cards);
+  }
+  /**
    * 
    * @return 
    */
