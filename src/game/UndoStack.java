@@ -7,6 +7,8 @@ import java.util.Stack;
  * @author Marek Jankech, Jan Morávek
  */
 public class UndoStack {
+  protected static final int MAX_UNDO_OPERATIONS = 5;
+  
   protected Stack<Command> uStack;
   
   public void push(Command cmd) {
@@ -24,6 +26,6 @@ public class UndoStack {
   }
   
   protected boolean isFull() {
-    return this.uStack.size() >= 5;
+    return this.uStack.size() >= MAX_UNDO_OPERATIONS;
   }
 }

@@ -35,6 +35,20 @@ public class KlondikeGame implements Serializable {
   protected KlondikeWaste waste;
   protected ArrayList<KlondikeWorkingPack> workingP;
   protected ArrayList<KlondikeTargetPack> targetP;
+  protected int selSrcIndex;
+  protected Selected selSrc = Selected.NOTHING;
+  protected Command command;
+  protected UndoStack undoStack;
+  /**
+   * Výčtový typ reprezentující typ vybratého balíčku.
+   */
+  public static enum Selected {
+    NOTHING,
+    STOCK,
+    WASTE,
+    WORKING_PACK,
+    TARGET_PACK;
+  }
   
   /**
    * Založí novou hru.
@@ -135,6 +149,67 @@ public class KlondikeGame implements Serializable {
     return true;
   }
   /**
+   * Akce po označení balíčku waste.
+   */
+  public void selectedWaste() {
+    if (this.selSrc == Selected.NOTHING) {
+      this.selSrc = Selected.WASTE;
+    }
+    else {
+      this.selSrc = Selected.NOTHING;
+    }
+  }
+  /**
+   * Akce po označení pracovního balíčku.
+   * @param index - index prac. balíčku
+   */
+  public void selectedWorkingPack(int index) {
+    if (this.selSrc == Selected.NOTHING) {
+      this.selSrc = Selected.WORKING_PACK;
+      this.selSrcIndex = index;
+    }
+    else if (this.selSrc == Selected.WASTE){
+      //TODO: spustit command a push na stack
+      this.selSrc = Selected.NOTHING;
+    }
+    else if (this.selSrc == Selected.TARGET_PACK){
+      //TODO: spustit command a push na stack
+      this.selSrc = Selected.NOTHING;
+    }
+    else if (this.selSrc == Selected.WORKING_PACK && this.selSrcIndex != index) {
+      //TODO: spustit command a push na stack
+      this.selSrc = Selected.NOTHING;
+    }
+    else {
+      this.selSrc = Selected.NOTHING;
+    }
+  }
+  /**
+   * Akce po označení cílového balíčku.
+   * @param index - index cíl. balíčku
+   */
+  public void selectedTargetPack(int index) {
+    if (this.selSrc == Selected.NOTHING) {
+      this.selSrc = Selected.TARGET_PACK;
+      this.selSrcIndex = index;
+    }
+    else if (this.selSrc == Selected.WASTE){
+      //TODO: spustit command a push na stack
+      this.selSrc = Selected.NOTHING;
+    }
+    else if (this.selSrc == Selected.TARGET_PACK && this.selSrcIndex != index){
+      //TODO: spustit command a push na stack
+      this.selSrc = Selected.NOTHING;
+    }
+    else if (this.selSrc == Selected.WORKING_PACK) {
+      this.command = new CardFromWPackToTPackCmd(this.getWorkingPack(this.selSrcIndex), this.getTargetPack(index));
+      if (this.command.execute()) {
+        this.undoStack.push(command);
+      }
+      this.selSrc = Selected.NOTHING;
+    }
+  }
+  /**
    * Vrací počet rozehratých her.
    * @return počet rozehratých her
    */
@@ -183,5 +258,19 @@ public class KlondikeGame implements Serializable {
    */
   public KlondikeWaste getWaste() {
     return this.waste;
+  }
+  /**
+   * Vrací označený zdrojový balíček.
+   * @return označený zdrojový balíček
+   */
+  public Selected getSelectedSource() {
+    return this.selSrc;
+  }
+  /**
+   * Vrací index označeného zdrojového balíčku.
+   * @return index označeného zdrojového balíčku
+   */
+  public int getSelectedSourceIndex() {
+    return this.selSrcIndex;
   }
 }
