@@ -1,4 +1,4 @@
-/build/
+/build/
 /dist/
 *.save
 
@@ -13,3 +13,15 @@ nbproject/
 src/model/KlondikeCardStack\.java
 
 src/model/CardStack\.java
+
+src/swingtest/cards/
+
+src/swingtest/back\.gif
+
+README\.md
+
+*.class
+
+*.gif
+
+*.properties

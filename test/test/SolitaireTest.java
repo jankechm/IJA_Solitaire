@@ -6,7 +6,6 @@ package test;
 import game.*;
 import model.Card;
 import model.CardDeck;
-import model.CardStack;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
