@@ -132,7 +132,7 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
     this.cards.addAll(cards);
   }
   /**
-   * 
+   * Otočí kartu na vrcholu lícem nahoru.
    * @return 
    */
   @Override
@@ -157,5 +157,17 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
   @Override
   public int size() {
     return this.cards.size();
+  }
+  /**
+   * Vrací zásobník karet v pracovním balíčku.
+   * @return zásobník karet
+   */
+  public Stack<Card> getCards() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    else {
+      return this.cards;
+    }
   }
 }

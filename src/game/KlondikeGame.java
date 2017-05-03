@@ -19,7 +19,7 @@ import model.KlondikeWaste;
 import model.KlondikeWorkingPack;
 
 /**
- *
+ * Třída reprezentující hru Solitaire Klondike.
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeGame implements Serializable {
@@ -99,7 +99,7 @@ public class KlondikeGame implements Serializable {
       this.targetP.add(i, (KlondikeTargetPack)factory.createTargetPack());
     }
     this.stock = (KlondikeStock)factory.createStock(deck);
-    this.waste = stock.getWaste();
+    this.waste = (KlondikeWaste)factory.createWaste();
     this.gameId = gameCnt;
     return true;
   }
@@ -175,7 +175,16 @@ public class KlondikeGame implements Serializable {
     return true;
   }
   /**
-   * Akce po označení balíčku waste.
+   * Akce po kliknutí na balíček stock.
+   */
+  public void selectedStock() {
+    this.command = new CardFromStockToWasteCmd(this.stock, this.waste);
+    if (this.command.execute()) {
+      this.undoStack.push(command);
+    }
+  }
+  /**
+   * Akce po kliknutí na balíček waste.
    */
   public void selectedWaste() {
     if (this.selSrc == Selected.NOTHING) {
@@ -186,7 +195,7 @@ public class KlondikeGame implements Serializable {
     }
   }
   /**
-   * Akce po označení pracovního balíčku.
+   * Akce po kliknutí na pracovní balíček.
    * @param index - index prac. balíčku
    */
   public void selectedWorkingPack(int index) {
@@ -195,7 +204,10 @@ public class KlondikeGame implements Serializable {
       this.selSrcIndex = index;
     }
     else if (this.selSrc == Selected.WASTE){
-      //TODO: spustit command a push na stack
+      this.command = new CardFromWasteToWPackCmd(this.waste, this.getWorkingPack(index));
+      if (this.command.execute()) {
+        this.undoStack.push(command);
+      }
       this.selSrc = Selected.NOTHING;
     }
     else if (this.selSrc == Selected.TARGET_PACK){
@@ -211,7 +223,7 @@ public class KlondikeGame implements Serializable {
     }
   }
   /**
-   * Akce po označení cílového balíčku.
+   * Akce po kliknutí na cílový balíček.
    * @param index - index cíl. balíčku
    */
   public void selectedTargetPack(int index) {
@@ -220,11 +232,17 @@ public class KlondikeGame implements Serializable {
       this.selSrcIndex = index;
     }
     else if (this.selSrc == Selected.WASTE){
-      //TODO: spustit command a push na stack
+      this.command = new CardFromWasteToTPackCmd(this.waste, this.getTargetPack(index));
+      if (this.command.execute()) {
+        this.undoStack.push(command);
+      }
       this.selSrc = Selected.NOTHING;
     }
     else if (this.selSrc == Selected.TARGET_PACK && this.selSrcIndex != index){
-      //TODO: spustit command a push na stack
+      this.command = new CardFromTPackToTPackCmd(this.getTargetPack(this.selSrcIndex), this.getTargetPack(index));
+      if (this.command.execute()) {
+        this.undoStack.push(command);
+      }
       this.selSrc = Selected.NOTHING;
     }
     else if (this.selSrc == Selected.WORKING_PACK) {
@@ -237,6 +255,22 @@ public class KlondikeGame implements Serializable {
     else {
       this.selSrc = Selected.NOTHING;
     }
+  }
+  /**
+   * Akce po kliknutí na prázdné místo.
+   */
+  public void selectedNothing() {
+    this.selSrc = Selected.NOTHING;
+  }
+  /**
+   * Akce po kliknutí na tlačítko Undo.
+   * @return úspěch operace Undo
+   */
+  public boolean undo() {
+    if ((this.command = this.undoStack.pop()) != null) {
+      return this.command.undo();
+    }
+    return false;
   }
   /**
    * Vrací počet rozehratých her.

@@ -23,22 +23,22 @@ public class KlondikeCard implements Serializable, Card {
     
     switch (this.value) {
       case 1:
-        textValue = "A";
+        textValue = "a";
         break;
       case 11:
-        textValue = "J";
+        textValue = "j";
         break;
       case 12:
-        textValue = "Q";
+        textValue = "q";
         break;
       case 13:
-        textValue = "K";
+        textValue = "k";
         break;
       default:
         textValue = String.valueOf(value);
         break;
     }
-    return textValue + '(' + color + ')';
+    return textValue + color;
   }
 
   @Override

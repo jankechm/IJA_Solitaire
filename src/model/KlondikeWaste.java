@@ -62,7 +62,6 @@ public class KlondikeWaste extends AbstractKlondikeStacker implements Serializab
    *
    * @return
    */
-  //@Override
   public Card pop() {
     if (this.isEmpty())
       return null;
@@ -84,6 +83,18 @@ public class KlondikeWaste extends AbstractKlondikeStacker implements Serializab
    */
   public int size() {
     return this.cards.size();
+  }
+  /**
+   * Vrací zásobník karet ve Waste balíčku.
+   * @return zásobník karet
+   */
+  public Stack<Card> getCards() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    else {
+      return this.cards;
+    }
   }
 }
 

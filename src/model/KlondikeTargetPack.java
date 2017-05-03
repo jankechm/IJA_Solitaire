@@ -93,4 +93,16 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
   public int size() {
     return this.cards.size();
   }
+  /**
+   * Vrací zásobník karet v cílovém balíčku.
+   * @return zásobník karet
+   */
+  public Stack<Card> getCards() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    else {
+      return this.cards;
+    }
+  }
 }

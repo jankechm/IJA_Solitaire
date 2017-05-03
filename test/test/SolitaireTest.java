@@ -217,5 +217,9 @@ public class SolitaireTest {
         
         Assert.assertEquals("Pocet karet v prac. balíku 1 je 1", 1, game.getWorkingPack(0).size());
         Assert.assertEquals("Pocet karet v stock je 24", 24, game.getStock().size());
+        
+        for (Card card : game.getStock().getCards()) {
+          System.out.println(card);
+        }
     }
 }

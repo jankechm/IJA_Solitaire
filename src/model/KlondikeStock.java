@@ -12,18 +12,17 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
   protected static final int STD_STOCK_SIZE = 24;
   
   protected Stack<Card> cards;
-  protected KlondikeWaste waste;
+  //protected KlondikeWaste waste;
   
   public KlondikeStock() {
     this.cards = new Stack<>();
-    this.waste = new KlondikeWaste();
+    //this.waste = new KlondikeWaste();
   }
 
   @Override
   public int hashCode() {
-    int hash = 3;
-    hash = 89 * hash + Objects.hashCode(this.cards);
-    hash = 89 * hash + Objects.hashCode(this.waste);
+    int hash = 7;
+    hash = 29 * hash + Objects.hashCode(this.cards);
     return hash;
   }
 
@@ -40,9 +39,6 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
     final KlondikeStock other = (KlondikeStock) obj;
     if (!Objects.equals(this.cards, other.cards)) {
-      return false;
-    }
-    if (!Objects.equals(this.waste, other.waste)) {
       return false;
     }
     return true;
@@ -68,16 +64,14 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
   }
   /**
-   * Přemístí kartu z kopky do zásobníku (waste).
-   * Pokud je kopka prázdná, znovu se naplní.
+   * Vybere kartu z vrcholu zásobníku.
+   * @return karta
    */
-  //@Override
-  public void pop() {
-    if (this.isEmpty()) {
-      this.pushBack();
-    }
+  public Card pop() {
+    if (this.isEmpty())
+      return null;
     else {
-      this.waste.put(this.cards.pop());
+      return this.cards.pop();
     }
   }
   /**
@@ -85,24 +79,24 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * @param card
    * @return 
    */
-  public boolean pushInit(Card card) {
+  public boolean put(Card card) {
     if (this.size() < STD_STOCK_SIZE) {
+      card.turnFaceDown();
       this.cards.push(card);
       return true;
     }
     return false;
   }
   /**
-   * Znovu-naplnění kopky.
-   * Karty ze zásobníku (waste) se přemístí do kopky.
+   * Vrací zásobník karet v Stock balíčku.
+   * @return zásobník karet
    */
-  protected void pushBack() {
-    Card card;
-    
-    while (!this.waste.isEmpty()) {
-      card = this.waste.pop();
-      card.turnFaceDown();
-      this.cards.push(card);
+  public Stack<Card> getCards() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    else {
+      return this.cards;
     }
   }
   /**
@@ -111,12 +105,5 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    */
   public int size() {
     return this.cards.size();
-  }
-  /**
-   * Vrací instanci Waste.
-   * @return instance Waste
-   */
-  public KlondikeWaste getWaste() {
-    return this.waste;
   }
 }

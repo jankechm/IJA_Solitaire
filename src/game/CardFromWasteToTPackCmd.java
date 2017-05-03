@@ -2,20 +2,19 @@ package game;
 
 import model.Card;
 import model.KlondikeTargetPack;
-import model.KlondikeWorkingPack;
+import model.KlondikeWaste;
 
 /**
- * Třída reprezentuje operaci přesunu karty z prac. balíčku do cíl. balíčku.
+ * Třída reprezentuje operaci přesunu karty z waste balíčku do cílového balíčku.
  * @author Marek Jankech, Jan Morávek
  */
-public class CardFromWPackToTPackCmd implements Command {
-  KlondikeWorkingPack wP;
+public class CardFromWasteToTPackCmd implements Command {
+  KlondikeWaste waste;
   KlondikeTargetPack tP;
   Card card;
-  boolean wasFaceDown = false;
   
-  public CardFromWPackToTPackCmd(KlondikeWorkingPack wP, KlondikeTargetPack tP) {
-    this.wP = wP;
+  public CardFromWasteToTPackCmd(KlondikeWaste waste, KlondikeTargetPack tP) {
+    this.waste = waste;
     this.tP = tP;
   }
   /**
@@ -24,15 +23,12 @@ public class CardFromWPackToTPackCmd implements Command {
    */
   @Override
   public boolean execute(){
-    if ((this.card = this.wP.pop()) == null) {
+    if ((this.card = this.waste.pop()) == null) {
       return false;
     }
     if ((this.tP.put(this.card)) == false) {
-      this.wP.pushBack(this.card);
+      this.waste.put(this.card);
       return false;
-    }
-    if (!this.wP.get().isTurnedFaceUp()) {
-      this.wasFaceDown = true;
     }
     return true;
   }
@@ -43,10 +39,7 @@ public class CardFromWPackToTPackCmd implements Command {
   @Override
   public boolean undo() {
     this.tP.pop();
-    if (this.wasFaceDown) {
-      this.wP.get().turnFaceDown();
-    }
-    this.wP.pushBack(this.card);
+    this.waste.put(card);
     return true;
   }
 }

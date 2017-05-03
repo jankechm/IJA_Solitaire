@@ -43,17 +43,17 @@ public class KlondikeFactory implements Serializable {
       if (deck.isEmpty()) {
         return null;
       }
-      stock.pushInit(deck.popRandom());
+      stock.put(deck.popRandom());
     }
     return stock;
   }
   
+  public KlondikeWaste createWaste() {
+    KlondikeWaste waste = new KlondikeWaste();
+    return waste;
+  }
+  
   public TargetPack createTargetPack() {
-    /*KlondikeCardDeck deck = new KlondikeCardDeck();
-    KlondikeCard virtualCard = new KlondikeCard(color, 1);
-    deck.setVirtualCard(virtualCard);
-    return deck;*/
-    
     KlondikeTargetPack tP = new KlondikeTargetPack();
     return tP;
   }
