@@ -33,7 +33,7 @@ public class Gameboard extends JComponent{
         g.setColor(blueBack);
         
 // DELETE PATH 
-        String namerino = "X:/IJA/Solitaire-In-Java-master/src/cards/back2.jpg";
+        String namerino = "./src/swingtest/cards/back.gif";
         
         workgap = 30;
         xgap = 15;
