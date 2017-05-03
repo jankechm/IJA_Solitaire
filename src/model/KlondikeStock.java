@@ -69,7 +69,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
   }
   /**
    * Přemístí kartu z kopky do zásobníku (waste).
-   * Pokud je halda prázdná, znovu se naplní.
+   * Pokud je kopka prázdná, znovu se naplní.
    */
   //@Override
   public void pop() {

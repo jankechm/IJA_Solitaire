@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Stack;
 
 /**
- *
+ * Třída reprezentující cílový balíček.
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeTargetPack extends AbstractKlondikeStacker implements Serializable, TargetPack {
