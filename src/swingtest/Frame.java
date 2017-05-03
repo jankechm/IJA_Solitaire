@@ -6,6 +6,7 @@
 
 package swingtest;
 
+import game.KlondikeGame;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -111,18 +112,23 @@ public class Frame extends JFrame {
     
     // listener for buttons
     private class ButtonHandler implements ActionListener {
+            private KlondikeGame game1;
             public void actionPerformed(ActionEvent event) {
                 if(event.getSource()==newGame) {
                     statusbar.setText("New Game");
+                    game1 = new KlondikeGame();
+                    game1.newGame();
                 }
                 else if(event.getSource()==saveGame) {
                     statusbar.setText("Save Game.");
+                    game1.saveGame();
                 }
                 else if(event.getSource()==loadGame) {
-                     statusbar.setText("Load Game.");
+                    statusbar.setText("Load Game.");
+                    //game1.loadGame(fileName);
                 }
                 else if(event.getSource()==undoGame) {
-                     statusbar.setText("UNDO");
+                    statusbar.setText("UNDO");
                 }
                 else if(event.getSource()==exitGame) {
                     statusbar.setText("Exit Game.");
