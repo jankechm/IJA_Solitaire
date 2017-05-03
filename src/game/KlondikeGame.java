@@ -25,10 +25,12 @@ import model.KlondikeWorkingPack;
 public class KlondikeGame implements Serializable {
   protected static final int WORKING_P_NUM = 7;
   protected static final int TARGET_P_NUM = 4;
+  protected static final int MAX_GAMES = 4;
   /**Počítadlo všech spuštěných her*/
   protected static int gameCnt = 0;
-  /**ID současné hry*/
-  protected int gameId;
+  /**Statické pole indikující spuštěné hry*/
+  protected static boolean[] startedGames = new boolean[MAX_GAMES];
+  
   protected KlondikeFactory factory;
   protected KlondikeCardDeck deck;
   protected KlondikeStock stock;
@@ -37,8 +39,13 @@ public class KlondikeGame implements Serializable {
   protected ArrayList<KlondikeTargetPack> targetP;
   protected int selSrcIndex;
   protected Selected selSrc = Selected.NOTHING;
+  /**Operace typu Command nad kartami*/
   protected Command command;
+  /**Stack operací undo*/
   protected UndoStack undoStack;
+  /**ID současné hry*/
+  protected int gameId;
+  
   /**
    * Výčtový typ reprezentující typ vybratého balíčku.
    */
@@ -50,6 +57,30 @@ public class KlondikeGame implements Serializable {
     TARGET_PACK;
   }
   
+  public KlondikeGame() {
+    setGameId();
+  }
+  /**
+   * Nastaví ID pro novou hru a zvýší počítadlo spuštěných her.
+   * Pokud počítadlo spuštěných her dosáhlo hodnotu MAX_GAMES, nebo se nenajde
+   * pro hru volný slot, nenastavuje nic a vrací false.
+   * @return true v případě nalezení volného slotu pro hru
+   */
+  private boolean setGameId() {
+    if (gameCnt < 4) {
+      for (int i = 0; i < MAX_GAMES; i++) {
+        if (!startedGames[i]) {
+          this.gameId = i;
+          startedGames[i] = true;
+          gameCnt++;
+          return true;
+        }
+      }
+    }
+    this.gameId = gameCnt;
+    gameCnt++;
+    return false;
+  }
   /**
    * Založí novou hru.
    * Vytvoří objekty reprezentované hrou a inicializuje je.
@@ -57,26 +88,20 @@ public class KlondikeGame implements Serializable {
    * @return true, pokud se úspěšně vytvořila nová hra, jinak false
    */
   public boolean newGame() {
-    if (gameCnt < 4) {
-      this.factory = new KlondikeFactory();
-      this.deck = (KlondikeCardDeck)factory.createCardDeck();
-      this.workingP = new ArrayList<>();
-      for (int i = 0; i < WORKING_P_NUM; i++) {
-        this.workingP.add(i, (KlondikeWorkingPack)factory.createWorkingPack(deck, i+1));
-      }
-      this.targetP = new ArrayList<>();
-      for (int i = 0; i < TARGET_P_NUM; i++) {
-        this.targetP.add(i, (KlondikeTargetPack)factory.createTargetPack());
-      }
-      this.stock = (KlondikeStock)factory.createStock(deck);
-      this.waste = stock.getWaste();
-      gameCnt++;
-      this.gameId = gameCnt;
-      return true;
+    this.factory = new KlondikeFactory();
+    this.deck = (KlondikeCardDeck)factory.createCardDeck();
+    this.workingP = new ArrayList<>();
+    for (int i = 0; i < WORKING_P_NUM; i++) {
+      this.workingP.add(i, (KlondikeWorkingPack)factory.createWorkingPack(deck, i+1));
     }
-    else {
-      return false;
+    this.targetP = new ArrayList<>();
+    for (int i = 0; i < TARGET_P_NUM; i++) {
+      this.targetP.add(i, (KlondikeTargetPack)factory.createTargetPack());
     }
+    this.stock = (KlondikeStock)factory.createStock(deck);
+    this.waste = stock.getWaste();
+    this.gameId = gameCnt;
+    return true;
   }
   /**
    * Ukončí hru.
@@ -88,6 +113,7 @@ public class KlondikeGame implements Serializable {
     this.targetP = null;
     this.stock = null;
     this.waste = null;
+    startedGames[this.gameId] = false;
     gameCnt--;
   }
   /**
@@ -206,6 +232,9 @@ public class KlondikeGame implements Serializable {
       if (this.command.execute()) {
         this.undoStack.push(command);
       }
+      this.selSrc = Selected.NOTHING;
+    }
+    else {
       this.selSrc = Selected.NOTHING;
     }
   }
