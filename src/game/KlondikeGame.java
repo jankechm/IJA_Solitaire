@@ -325,7 +325,7 @@ public class KlondikeGame implements Serializable {
    * @return instance prac. balíčku
    */
   public KlondikeWorkingPack getWorkingPack(int index) {
-    if (index > this.workingP.size() - 1) {
+    if (index < 0 || index >= WORKING_P_NUM) {
       return null;
     }
     return this.workingP.get(index);
@@ -336,7 +336,7 @@ public class KlondikeGame implements Serializable {
    * @return instance zdroj. balíčku
    */
   public KlondikeTargetPack getTargetPack(int index) {
-    if (index > this.targetP.size() - 1) {
+    if (index < 0 || index >= TARGET_P_NUM) {
       return null;
     }
     return this.targetP.get(index);
