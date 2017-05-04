@@ -12,8 +12,8 @@ public interface CardDeck {
   Card get(int index);
   boolean	isEmpty();
   Card pop();
-  public Card popRandom();
+  Card popRandom();
   boolean put(Card card);
   int size();
-  public void shuffle();
+  void shuffle();
 }

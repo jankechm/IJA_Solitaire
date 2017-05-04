@@ -31,7 +31,7 @@ public class CardFromWPackToTPackCmd implements Command {
       this.wP.pushBack(this.card);
       return false;
     }
-    if (!this.wP.get().isTurnedFaceUp()) {
+    if (this.wP.get().turnFaceUp()) {
       this.wasFaceDown = true;
     }
     return true;

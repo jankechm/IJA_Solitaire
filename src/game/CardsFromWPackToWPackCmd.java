@@ -13,6 +13,7 @@ public class CardsFromWPackToWPackCmd implements Command {
   KlondikeWorkingPack wP2;
   Card card;
   Stack<Card> cards;
+  boolean wasFaceDown = false;
   
   public CardsFromWPackToWPackCmd(KlondikeWorkingPack wP1, KlondikeWorkingPack wP2) {
     this.wP1 = wP1;
@@ -29,6 +30,9 @@ public class CardsFromWPackToWPackCmd implements Command {
       if (this.card != null && this.card.isTurnedFaceUp() && this.wP2.canPut(this.card)) {
         this.cards = this.wP1.pop(i);
         this.wP2.put(this.cards);
+        if (this.wP1.get().turnFaceUp()) {
+          this.wasFaceDown = true;
+        }
         return true;
       }
     }
@@ -40,6 +44,9 @@ public class CardsFromWPackToWPackCmd implements Command {
    */
   @Override
   public boolean undo() {
+    if (this.wasFaceDown) {
+      this.wP1.get().turnFaceDown();
+    }
     this.cards = this.wP2.pop(this.card);
     this.wP1.put(this.cards);
     return true;
