@@ -9,6 +9,8 @@ import java.util.Stack;
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeTargetPack extends AbstractKlondikeStacker implements Serializable, TargetPack {
+  public static final int FULL_T_PACK = 13;
+  
   protected Stack<Card> cards;
   
   public KlondikeTargetPack() {
@@ -53,8 +55,8 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
     }
   }
   /**
-   * Vytáhne kartu z cílového balíčku.
-   * @return Karta z cíl. balíčku, nebo null, pokud je prázdný.
+   * Vybere kartu z vrcholu zásobníku.
+   * @return karta
    */
   @Override
   public Card pop() {
@@ -71,7 +73,7 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
    */
   @Override
   public boolean put(Card card) {
-    if ((this.isEmpty() && card.value() == 1) ||
+    if ((this.isEmpty() && card.value() == Card.ACE) ||
         (!this.isEmpty() && this.get().similarColorTo(card) && this.get().value() == card.value() - 1)) {
       this.cards.push(card);
       return true;
@@ -82,8 +84,16 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
    * 
    * @return 
    */
+  @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
+  }
+  /**
+   * Test plnosti cíl. balíčku.
+   * @return true, pokud je plný, jinak false
+   */
+  public boolean isFull() {
+    return this.size() >= FULL_T_PACK;
   }
   /**
    * 
@@ -97,6 +107,7 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
    * Vrací zásobník karet v cílovém balíčku.
    * @return zásobník karet
    */
+  @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {
       return null;

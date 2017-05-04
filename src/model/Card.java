@@ -8,7 +8,8 @@ package model;
  * @author Marek Jankech, Jan Morávek
  */
 public interface Card {
-
+  public static final int ACE = 1;
+  public static final int KING = 13;
   /**
    * Výčtový typ reprezentující barvu karty.
    */

@@ -9,7 +9,7 @@ import java.util.Stack;
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeStock extends AbstractKlondikeStacker implements Serializable {
-  protected static final int STD_STOCK_SIZE = 24;
+  public static final int STD_STOCK_SIZE = 24;
   
   protected Stack<Card> cards;
   //protected KlondikeWaste waste;
@@ -48,6 +48,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * 
    * @return 
    */
+  @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
@@ -67,6 +68,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * Vybere kartu z vrcholu zásobníku.
    * @return karta
    */
+  @Override
   public Card pop() {
     if (this.isEmpty())
       return null;
@@ -79,6 +81,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * @param card
    * @return 
    */
+  @Override
   public boolean put(Card card) {
     if (this.size() < STD_STOCK_SIZE) {
       card.turnFaceDown();
@@ -91,6 +94,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * Vrací zásobník karet v Stock balíčku.
    * @return zásobník karet
    */
+  @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {
       return null;
@@ -103,6 +107,7 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
    * 
    * @return 
    */
+  @Override
   public int size() {
     return this.cards.size();
   }

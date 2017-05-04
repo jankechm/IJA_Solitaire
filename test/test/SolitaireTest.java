@@ -8,7 +8,6 @@ import model.Card;
 import model.CardDeck;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import model.TargetPack;
 import model.WorkingPack;
 import org.junit.After;

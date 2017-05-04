@@ -1,8 +1,6 @@
 package game;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Stack;
 import model.*;
 
 /**
@@ -10,14 +8,9 @@ import model.*;
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeFactory implements Serializable {
-  protected static final int STD_DECK_SIZE = 52;
-  protected static final int CASCADE_SIZE = 13;
-  protected static final int STD_STOCK_SIZE = 24;
-  protected static final int ACE = 1;
-  protected static final int KING = 13;
   
   public Card createCard(Card.Color color, int value) {
-    if (value >= ACE && value <= KING && containsColor(color.name())) {
+    if (value >= Card.ACE && value <= Card.KING && containsColor(color.name())) {
       return new KlondikeCard(color, value);
     }
     return null;
@@ -26,11 +19,11 @@ public class KlondikeFactory implements Serializable {
   public CardDeck createCardDeck() {
     KlondikeCardDeck deck = new KlondikeCardDeck();
     
-    for (int i = 1; i <= CASCADE_SIZE; i++) {
-      deck.pushInit(this.createCard(Card.Color.CLUBS, i));
-      deck.pushInit(this.createCard(Card.Color.DIAMONDS, i));
-      deck.pushInit(this.createCard(Card.Color.HEARTS, i));
-      deck.pushInit(this.createCard(Card.Color.SPADES, i));
+    for (int i = 1; i <= CardDeck.SAME_COLORED_MAX; i++) {
+      deck.put(this.createCard(Card.Color.CLUBS, i));
+      deck.put(this.createCard(Card.Color.DIAMONDS, i));
+      deck.put(this.createCard(Card.Color.HEARTS, i));
+      deck.put(this.createCard(Card.Color.SPADES, i));
       deck.shuffle();
     }
     return deck;
@@ -39,7 +32,7 @@ public class KlondikeFactory implements Serializable {
   public KlondikeStock createStock(CardDeck deck) {
     KlondikeStock stock = new KlondikeStock();
     
-    for (int i = 0; i < STD_STOCK_SIZE; i++) {
+    for (int i = 0; i < KlondikeStock.STD_STOCK_SIZE; i++) {
       if (deck.isEmpty()) {
         return null;
       }

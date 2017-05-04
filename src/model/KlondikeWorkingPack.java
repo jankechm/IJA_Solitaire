@@ -7,7 +7,7 @@ import java.util.Stack;
  * Třída reprezentující pracovní balíček.
  * @author Marek Jankech, Jan Morávek
  */
-public class KlondikeWorkingPack implements WorkingPack, Serializable {
+public class KlondikeWorkingPack extends AbstractKlondikeStacker implements WorkingPack, Serializable {
   protected int initSize;
   protected Stack<Card> cards;
   
@@ -29,9 +29,11 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
     }
   }
   /**
-   * 
-   * @param index
-   * @return 
+   * Vrátí kartu na uvedenem indexu.
+   * Spodni karta je na indexu 0, vrchol je na indexu size() - 1.
+   * Pokud je balíček prázdný, nebo index mimo rozsah, vrací null.
+   * @param index - pozice karty v balíčku
+   * @return karta z vrcholu balíčku
    */
   @Override
   public Card	get(int index) {
@@ -42,8 +44,8 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
     }
   }
   /**
-   * Vytáhne kartu z pracovního balíčku.
-   * @return Karta z prac. balíčku, nebo null, pokud je prázdný.
+   * Vybere kartu z vrcholu zásobníku.
+   * @return karta
    */
   @Override
   public Card pop() {
@@ -54,9 +56,10 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
     }
   }
   /**
-   * 
-   * @param card
-   * @return 
+   * Metoda odebere ze zásobníku sekvenci karet od zadané karty až po vrchol zásobníku.
+   * Pokud je hledaná karta na vrcholu, bude v sekvenci pouze jedna karta.
+   * @param card - hledaná karta
+   * @return Zásobník karet obsahující odebranou sekvenci. Pokud hledaná karta v zásobníku není, vrací null.
    */
   @Override
   public Stack<Card> pop(Card card) {
@@ -76,18 +79,49 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
       return null;
   }
   /**
+   * Metoda odebere ze zásobníku sekvenci karet od zadaného indexu až po vrchol zásobníku.
+   * Pokud se jedná o index vrcholu, bude v sekvenci pouze jedna karta.
+   * Pokud je balíček prázdný, nebo index mimo rozsah, vrací null.
+   * @param index - index hledané karty
+   * @return zásobník karet obsahující odebranou sekvenci nebo null
+   */
+  public Stack<Card> pop(int index) {
+    Stack<Card> removedCards;
+    Card c;
+    
+    if (index >= 0 && index < this.size()) {
+      removedCards = new Stack<>();
+      for (int i = 0; i <= index; i++) {
+        c = this.cards.pop();
+        removedCards.add(0, c);
+      }
+      return removedCards;
+    }
+    else
+      return null;
+  }
+  /**
    * 
    * @param card
    * @return 
    */
   @Override
   public boolean put(Card card) {
-    if ((this.isEmpty() && card.value() == 13) ||
+    if ((this.isEmpty() && card.value() == Card.KING) ||
         (!this.isEmpty() && !this.get().similarColorTo(card) && this.get().value() - 1 == card.value())) {
       this.cards.push(card);
       return true;
     }
     return false;
+  }
+  /**
+   * Zjišťuje, zda je možné do pracovního balíčku vložit danou kartu.
+   * @param card - karta ke vložení
+   * @return úspěšnost možného vložení dané karty
+   */
+  public boolean canPut(Card card) {
+    return (this.isEmpty() && card.value() == Card.KING) ||
+      (!this.isEmpty() && !this.get().similarColorTo(card) && this.get().value() - 1 == card.value());
   }
   /**
    * 
@@ -96,7 +130,7 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
    */
   @Override
   public boolean put(Stack<Card> cards) {
-    if ((this.isEmpty() && cards.firstElement().value() == 13) ||
+    if ((this.isEmpty() && cards.firstElement().value() == Card.KING) ||
        (!this.isEmpty() && this.get().value() == cards.firstElement().value() + 1 &&
        !this.get().similarColorTo(cards.firstElement()))) {
       this.cards.addAll(cards);
@@ -147,6 +181,7 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
    * 
    * @return 
    */
+  @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
@@ -162,6 +197,7 @@ public class KlondikeWorkingPack implements WorkingPack, Serializable {
    * Vrací zásobník karet v pracovním balíčku.
    * @return zásobník karet
    */
+  @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {
       return null;

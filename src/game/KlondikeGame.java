@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import model.KlondikeCardDeck;
 import model.KlondikeStock;
 import model.KlondikeTargetPack;
@@ -58,7 +57,7 @@ public class KlondikeGame implements Serializable {
   }
   
   public KlondikeGame() {
-    setGameId();
+    this.setGameId();
   }
   /**
    * Nastaví ID pro novou hru a zvýší počítadlo spuštěných her.
@@ -66,7 +65,7 @@ public class KlondikeGame implements Serializable {
    * pro hru volný slot, nenastavuje nic a vrací false.
    * @return true v případě nalezení volného slotu pro hru
    */
-  private boolean setGameId() {
+  protected final boolean setGameId() {
     if (gameCnt < 4) {
       for (int i = 0; i < MAX_GAMES; i++) {
         if (!startedGames[i]) {
@@ -124,7 +123,7 @@ public class KlondikeGame implements Serializable {
   public String saveGame() {
     //Aktuální datum a čas jako název souboru pro uložení
     LocalDateTime dateTime = LocalDateTime.now();
-    String fileName = dateTime.format(DateTimeFormatter.ofPattern("d-M-y_H-m-ss")) + ".save";
+    String fileName = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-y_HH-mm-ss")) + ".save";
     
 		try (FileOutputStream fo = new FileOutputStream(new File(fileName));
          ObjectOutputStream oo = new ObjectOutputStream(fo)) {
@@ -187,9 +186,11 @@ public class KlondikeGame implements Serializable {
    * Akce po kliknutí na balíček waste.
    */
   public void selectedWaste() {
+    //označení balíčku waste
     if (this.selSrc == Selected.NOTHING) {
       this.selSrc = Selected.WASTE;
     }
+    //zrušení označení
     else {
       this.selSrc = Selected.NOTHING;
     }
@@ -199,27 +200,42 @@ public class KlondikeGame implements Serializable {
    * @param index - index prac. balíčku
    */
   public void selectedWorkingPack(int index) {
-    if (this.selSrc == Selected.NOTHING) {
-      this.selSrc = Selected.WORKING_PACK;
-      this.selSrcIndex = index;
-    }
-    else if (this.selSrc == Selected.WASTE){
-      this.command = new CardFromWasteToWPackCmd(this.waste, this.getWorkingPack(index));
-      if (this.command.execute()) {
-        this.undoStack.push(command);
-      }
-      this.selSrc = Selected.NOTHING;
-    }
-    else if (this.selSrc == Selected.TARGET_PACK){
-      //TODO: spustit command a push na stack
-      this.selSrc = Selected.NOTHING;
-    }
-    else if (this.selSrc == Selected.WORKING_PACK && this.selSrcIndex != index) {
-      //TODO: spustit command a push na stack
-      this.selSrc = Selected.NOTHING;
-    }
-    else {
-      this.selSrc = Selected.NOTHING;
+    switch (this.selSrc) {
+      case NOTHING:
+        //označení prac. balíčku
+        this.selSrc = Selected.WORKING_PACK;
+        this.selSrcIndex = index;
+        break;
+      case WASTE:
+        //operace přesunu karty z balíčku waste do prac. balíčku
+        this.command = new CardFromWasteToWPackCmd(this.waste, this.getWorkingPack(index));
+        if (this.command.execute()) {
+          this.undoStack.push(command);
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      case TARGET_PACK:
+        //operace přesunu karty z cíl. balíčku do prac. balíčku
+        this.command = new CardFromTPackToWPackCmd(this.getTargetPack(this.selSrcIndex), this.getWorkingPack(index));
+        if (this.command.execute()) {
+          this.undoStack.push(command);
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      case WORKING_PACK:
+        if (this.selSrcIndex != index) {
+          //operace přesunu karet z prac. balíčku do jiného prac. balíčku
+          this.command = new CardsFromWPackToWPackCmd(this.getWorkingPack(this.selSrcIndex), this.getWorkingPack(index));
+          if (this.command.execute()) {
+            this.undoStack.push(command);
+          }
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      default:
+        //zrušení označení
+        this.selSrc = Selected.NOTHING;
+        break;
     }
   }
   /**
@@ -227,39 +243,49 @@ public class KlondikeGame implements Serializable {
    * @param index - index cíl. balíčku
    */
   public void selectedTargetPack(int index) {
-    if (this.selSrc == Selected.NOTHING) {
-      this.selSrc = Selected.TARGET_PACK;
-      this.selSrcIndex = index;
-    }
-    else if (this.selSrc == Selected.WASTE){
-      this.command = new CardFromWasteToTPackCmd(this.waste, this.getTargetPack(index));
-      if (this.command.execute()) {
-        this.undoStack.push(command);
-      }
-      this.selSrc = Selected.NOTHING;
-    }
-    else if (this.selSrc == Selected.TARGET_PACK && this.selSrcIndex != index){
-      this.command = new CardFromTPackToTPackCmd(this.getTargetPack(this.selSrcIndex), this.getTargetPack(index));
-      if (this.command.execute()) {
-        this.undoStack.push(command);
-      }
-      this.selSrc = Selected.NOTHING;
-    }
-    else if (this.selSrc == Selected.WORKING_PACK) {
-      this.command = new CardFromWPackToTPackCmd(this.getWorkingPack(this.selSrcIndex), this.getTargetPack(index));
-      if (this.command.execute()) {
-        this.undoStack.push(command);
-      }
-      this.selSrc = Selected.NOTHING;
-    }
-    else {
-      this.selSrc = Selected.NOTHING;
+    switch (this.selSrc) {
+      case NOTHING:
+        //označení cíl. balíčku
+        this.selSrc = Selected.TARGET_PACK;
+        this.selSrcIndex = index;
+        break;
+      case WASTE:
+        //operace přesunu karty z balíčku waste do cíl. balíčku
+        this.command = new CardFromWasteToTPackCmd(this.waste, this.getTargetPack(index));
+        if (this.command.execute()) {
+          this.undoStack.push(command);
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      case TARGET_PACK:
+        if (this.selSrcIndex != index){
+          //operace přesunu karty z cíl. balíčku do jíného cíl. balíčku
+          this.command = new CardFromTPackToTPackCmd(this.getTargetPack(this.selSrcIndex), this.getTargetPack(index));
+          if (this.command.execute()) {
+            this.undoStack.push(command);
+          }
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      case WORKING_PACK:
+        //operace přesunu karty z prac. balíčku do cíl. balíčku
+        this.command = new CardFromWPackToTPackCmd(this.getWorkingPack(this.selSrcIndex), this.getTargetPack(index));
+        if (this.command.execute()) {
+          this.undoStack.push(command);
+        }
+        this.selSrc = Selected.NOTHING;
+        break;
+      default:
+        //zrušení označení
+        this.selSrc = Selected.NOTHING;
+        break;
     }
   }
   /**
    * Akce po kliknutí na prázdné místo.
    */
   public void selectedNothing() {
+    //zrušení označení
     this.selSrc = Selected.NOTHING;
   }
   /**
@@ -271,6 +297,13 @@ public class KlondikeGame implements Serializable {
       return this.command.undo();
     }
     return false;
+  }
+  /**
+   * Kontrola, jestli už uživatel zvítězil.
+   * @return true, pokud zvítězil; false pokud ještě ne
+   */
+  public boolean checkIfVictory() {
+    return this.targetP.stream().allMatch((KlondikeTargetPack tp) -> (tp.isFull()));
   }
   /**
    * Vrací počet rozehratých her.

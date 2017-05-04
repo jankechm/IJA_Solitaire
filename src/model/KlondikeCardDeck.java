@@ -5,17 +5,12 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
-//import model.cards.CardDeck;
-//import model.cards.Card;
 
 /**
  *
  * @author Marek
  */
-public class KlondikeCardDeck implements CardDeck, Serializable{
-  protected static final int STD_DECK_SIZE = 52;
-  protected static final int SAME_COLORED_MAX = 13;
-
+public class KlondikeCardDeck extends AbstractKlondikeStacker implements CardDeck, Serializable{
   protected Stack<Card> cards;
   
   public KlondikeCardDeck() {
@@ -69,7 +64,10 @@ public class KlondikeCardDeck implements CardDeck, Serializable{
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
-  
+  /**
+   * Vybere kartu z vrcholu zásobníku.
+   * @return karta
+   */
   @Override
   public Card pop() {
     if (this.cards.isEmpty())
@@ -95,7 +93,7 @@ public class KlondikeCardDeck implements CardDeck, Serializable{
   }
   
   @Override
-  public boolean pushInit(Card card) {
+  public boolean put(Card card) {
     if (this.size() < STD_DECK_SIZE) {
       this.cards.push(card);
       return true;
@@ -108,14 +106,23 @@ public class KlondikeCardDeck implements CardDeck, Serializable{
     return this.cards.size();
   }
   /**
+   * Vrací zásobník karet v zdrojovém deck balíčku.
+   * @return zásobník karet
+   */
+  @Override
+  public Stack<Card> getCards() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    else {
+      return this.cards;
+    }
+  }
+  /**
    * Promíchá karty balíčku
    */
+  @Override
   public void shuffle() {
     Collections.shuffle(this.cards);
-    /*int i = 1;
-    for (Card c : this.cards) {
-      System.out.println(String.valueOf(i) + ' ' + c);
-      i++;
-    }*/
   }
 }
