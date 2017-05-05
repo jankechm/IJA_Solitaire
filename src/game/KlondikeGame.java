@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import model.Card;
 import model.KlondikeCardDeck;
 import model.KlondikeStock;
 import model.KlondikeTargetPack;

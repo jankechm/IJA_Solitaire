@@ -33,6 +33,10 @@ public class Hint {
       this.srcIndex = -1;
       return true;
     }
+    if (this.wasteToWPack()) {
+      this.srcIndex = -1;
+      return true;
+    }
     if (this.stockClick()) {
       this.srcIndex = -1;
       this.destIndex = -1;
@@ -131,6 +135,26 @@ public class Hint {
         if (destTP.canPut(waste.get())) {
             this.src = KlondikeGame.Selected.WASTE;
             this.dest = KlondikeGame.Selected.TARGET_PACK;
+            return true;
+        }
+      }
+    }
+    return false;
+  }
+  /**
+   * Hledání možného tahu mezi waste balíčkem a prac. balíčky.
+   * @return true, pokud najde možný tah, jinak false
+   */
+  protected boolean wasteToWPack() {
+    KlondikeWaste waste = this.game.getWaste();
+    KlondikeWorkingPack destTP;
+    
+    if (!waste.isEmpty()) {
+      for (this.destIndex = 0; this.destIndex < KlondikeGame.WORKING_P_NUM; this.destIndex++) {
+        destTP = this.game.getWorkingPack(this.destIndex);
+        if (destTP.canPut(waste.get())) {
+            this.src = KlondikeGame.Selected.WASTE;
+            this.dest = KlondikeGame.Selected.WORKING_PACK;
             return true;
         }
       }
