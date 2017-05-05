@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import model.Card;
 import model.KlondikeCardDeck;
 import model.KlondikeStock;
 import model.KlondikeTargetPack;
@@ -299,6 +300,18 @@ public class KlondikeGame implements Serializable {
       return this.command.undo();
     }
     return false;
+  }
+  /**
+   * Hledání možných tahů karet.
+   * @return instance třídy Hint, pokud najde možný tah, jinak null
+   */
+  public Hint hint() {
+    Hint hint = new Hint(this);
+    
+    if (hint.giveHint()) {
+      return hint;
+    }
+    return null;
   }
   /**
    * Kontrola, jestli už uživatel zvítězil.

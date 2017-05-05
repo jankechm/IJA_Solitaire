@@ -195,11 +195,11 @@ public class SolitaireTest {
         Assert.assertEquals("Pocet karet v stock je 24", 24, game.getStock().size());
         Assert.assertEquals("Pocet karet ve waste je 0", 0, game.getWaste().size());
         Assert.assertTrue("Zdrojový balíček deck je prázdný", game.getDeck().isEmpty());
-        Assert.assertEquals("Pocet rozehratých her je 1", 1, KlondikeGame.getGameCnt());
+        Assert.assertEquals("Pocet rozehratých her je 1", 1, KlondikeGame.getGamesCnt());
         
         game.quitGame();
         
-        Assert.assertEquals("Pocet rozehratých her je 0", 0, KlondikeGame.getGameCnt());
+        Assert.assertEquals("Pocet rozehratých her je 0", 0, KlondikeGame.getGamesCnt());
         
         game.newGame();
         fileName = game.saveGame();

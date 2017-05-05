@@ -82,6 +82,15 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
   }
   /**
    * 
+   * @param card
+   * @return 
+   */
+  public boolean canPut(Card card) {
+    return (this.isEmpty() && card.value() == Card.ACE) ||
+      (!this.isEmpty() && this.get().similarColorTo(card) && this.get().value() == card.value() - 1);
+  }
+  /**
+   * 
    * @return 
    */
   @Override
