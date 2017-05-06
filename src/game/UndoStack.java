@@ -8,8 +8,11 @@ import java.util.Stack;
  */
 public class UndoStack {
   protected static final int MAX_UNDO_OPERATIONS = 5;
-  
   protected Stack<Command> uStack;
+  
+  public UndoStack() {
+    this.uStack = new Stack<>();
+  }
   
   public void push(Command cmd) {
     if (this.isFull()) {

@@ -42,6 +42,8 @@ public class KlondikeGame implements Serializable {
   protected Command command;
   /**Stack operací undo*/
   protected UndoStack undoStack;
+  /**Instance třídy pro nápovědu*/
+  protected Hint hint;
   /**ID současné hry*/
   protected int gameId;
   
@@ -98,6 +100,8 @@ public class KlondikeGame implements Serializable {
       }
       this.stock = (KlondikeStock)factory.createStock(deck);
       this.waste = (KlondikeWaste)factory.createWaste();
+      this.hint = new Hint(this);
+      this.undoStack = new UndoStack();
       return true;
     }
     return false;
@@ -305,10 +309,8 @@ public class KlondikeGame implements Serializable {
    * @return instance třídy Hint, pokud najde možný tah, jinak null
    */
   public Hint hint() {
-    Hint hint = new Hint(this);
-    
-    if (hint.giveHint()) {
-      return hint;
+    if (this.hint.giveHint()) {
+      return this.hint;
     }
     return null;
   }
