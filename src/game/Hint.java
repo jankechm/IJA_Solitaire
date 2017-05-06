@@ -63,8 +63,8 @@ public class Hint {
         //hledání první karty obrácené lícem nahor v aktuálním zdroj. balíčku
         while (!card.isTurnedFaceUp()) {
           cardIndex++;
+          card = srcWP.get(cardIndex);
         }
-        card = srcWP.get(cardIndex);
         //hledání cíle pro vložení karty
         if (this.findDestWP(card)) {
           return true;
@@ -166,7 +166,7 @@ public class Hint {
    * @return true, pokud je možný tah, jinak false
    */
   protected boolean stockClick() {
-    return (!this.game.getStock().isEmpty() && !this.game.getWaste().isEmpty());
+    return (!this.game.getStock().isEmpty() || !this.game.getWaste().isEmpty());
   }
   /**
    * Getter pro index source balíčku.
