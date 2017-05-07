@@ -45,6 +45,7 @@ public class Gameboard extends JComponent{
     public int gameNum4 = 0;
     public int gameActive = 0;
     public boolean gameMotion = true;
+    private int selectedCard = -1;
     private String namerino = "";
 
 
@@ -70,21 +71,26 @@ public class Gameboard extends JComponent{
             }
         } else if (gameNumber > 1) {
             drawGameBorder(g);
-            drawGame(g, game1, 15, 10);
-            drawGame(g, game2, 719, 10);
-            drawGame(g, game3, 15, 420);
-            drawGame(g, game4, 719, 420);
+            if (gameNum1 == 1)
+                drawGame(g, game1, 15, 10);
+            if (gameNum2 == 1)
+                drawGame(g, game2, 719, 10);
+            if (gameNum3 == 1)
+                drawGame(g, game3, 15, 420);
+            if (gameNum4 == 1)
+                drawGame(g, game4, 719, 420);
         }
     }
 
     private void drawGame (Graphics g, KlondikeGame gameTmp, int xgap, int ygap) {
         String dir = "lib/cards/";
         String back = "lib/cards/back2.jpg";
+        resolveBorder(gameTmp);
 
             workgap = 30;
            /*xgap = 65;
             ygap = 10;*/
-            // draw deck
+            // draw stock
             xd = xgap;
             yd = ygap;
             namerino = back;
@@ -95,7 +101,7 @@ public class Gameboard extends JComponent{
             }
             drawCard(g, namerino, xd, yd);
 
-            // draw stack
+            // draw waste
             xd = xgap + workgap + CWIDTH;
             yd = ygap;
             try {
@@ -106,6 +112,9 @@ public class Gameboard extends JComponent{
             } catch (Exception e) {
                 namerino = "";
             }
+            if (selectedCard == 2) {
+                    drawCardBorder(g, xd, yd);
+            }
 
             // target packs
             xd = xgap + 3 * workgap + 3 * CWIDTH;
@@ -115,12 +124,15 @@ public class Gameboard extends JComponent{
                 xd = xgap + (i + 2) * workgap + (i + 2) * CWIDTH;
                 yd = ygap;
                 try {
-                    namerino = gameTmp.getTargetPack(i).get().toString();
+                    namerino = gameTmp.getTargetPack(i-1).get().toString();
                     namerino = dir + namerino + ".gif";
                 } catch (Exception e) {
                     namerino = "";
                 }
                 drawCard(g, namerino, xd, yd);
+                if (selectedCard == i+2) {
+                    drawCardBorder(g, xd, yd);
+                }
             }
             /*
             xgap = 65;*/
@@ -157,13 +169,15 @@ public class Gameboard extends JComponent{
                             yd = ygap + CHEIGHT;
                         }
                         drawCard(g, namerino, xd, yd);
+                        if (selectedCard == i+6 && j==k) {
+                            drawCardBorder(g, xd, yd);
+                        }
                     }
                 } catch (Exception ee) {
                     namerino = "";
                     drawCard(g, namerino, xd, yd);
                 }
             }
-
     }
 
     private void drawNoGame (Graphics g, int xgap, int ygap) {
@@ -318,6 +332,7 @@ public class Gameboard extends JComponent{
     }
 
     public void actionProvide (int index, int action) {
+        System.out.printf("GAME%d: action: %d\n", index, action);
         if (index == 1 && gameNum1 == 1) {
             if (action == 0) {
                 game1.selectedNothing();
@@ -330,8 +345,6 @@ public class Gameboard extends JComponent{
             } else if (action >= 7) {
                 game1.selectedWorkingPack(action-7);
             }
-            System.out.println(index);
-            System.out.println(action);
         } else if (index == 2 && gameNum2 == 1) {
             if (action == 0) {
                 game2.selectedNothing();
@@ -344,8 +357,6 @@ public class Gameboard extends JComponent{
             } else if (action >= 7) {
                 game2.selectedWorkingPack(action-7);
             }
-            System.out.println(index);
-            System.out.println(action);
         } else if (index == 3 && gameNum3 == 1) {
             if (action == 0) {
                 game3.selectedNothing();
@@ -358,8 +369,6 @@ public class Gameboard extends JComponent{
             } else if (action >= 7) {
                 game3.selectedWorkingPack(action-7);
             }
-            System.out.println(index);
-            System.out.println(action);
         } else if (index == 4 && gameNum4 == 1) {
             if (action == 0) {
                 game4.selectedNothing();
@@ -372,8 +381,6 @@ public class Gameboard extends JComponent{
             } else if (action >= 7) {
                 game4.selectedWorkingPack(action-7);
             }
-            System.out.println(index);
-            System.out.println(action);
         }
     }
 
@@ -398,12 +405,28 @@ public class Gameboard extends JComponent{
 		}
 	}
 
-    private void drawBorder(Graphics g, int x, int y)
-    {
-        g.setColor(Color.YELLOW);
+    private void resolveBorder(KlondikeGame gameTmp) {
+        try {
+            int index = gameTmp.getSelectedSourceIndex();
+            if (gameTmp.getSelectedSource() == KlondikeGame.Selected.WASTE) {
+                selectedCard = 2; // waste
+            } else if (gameTmp.getSelectedSource() == KlondikeGame.Selected.TARGET_PACK) {
+                selectedCard = 3 + index; // target pack
+            } else if (gameTmp.getSelectedSource() == KlondikeGame.Selected.WORKING_PACK) {
+                selectedCard = 7 + index; // working pack
+            } else {
+                selectedCard = 0; // nothing
+            }
+        } catch (Exception e) {
+            selectedCard = -1;
+        }
+    }
+
+    private void drawCardBorder (Graphics g, int x, int y) {
+        g.setColor(blueBack);
         g.drawRect(x, y, CWIDTH, CHEIGHT);
+
         g.drawRect(x + 1, y + 1, CWIDTH - 2, CHEIGHT - 2);
         g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
     }
-    
 }

@@ -149,7 +149,7 @@ public class Frame extends JFrame {
     public void setFrameSize() {
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0 || gameb.gameNumber == 1) {
-            this.setSize(720, 405);
+            this.setSize(720, 455);
             this.setLocationRelativeTo(null);
         } else if (gameb.gameNumber > 1) {
             this.setSize(1425, 880);
@@ -290,7 +290,6 @@ public class Frame extends JFrame {
                         //gameb.drawBorder(15, 30)
                     } */
                     statusbar.setText(String.format("Click!! %s %s", event.getX(), event.getY()));
-
                     if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
                         xtmp = 15;
                         ytmp = 52;
@@ -307,10 +306,10 @@ public class Frame extends JFrame {
                                         statusbar.setText("game1: target pack " + (i + 1) + " clicked");
                                         gameb.actionProvide(1, i + 3);
                                         break;
-                                    } /*else {
+                                    } else if (i == 6) {
                                         statusbar.setText("game1: else clicked");
                                         gameb.actionProvide(1, 0);
-                                    }*/
+                                    }
                                 }
                             } else {
                                 statusbar.setText("game1: else clicked");
@@ -322,10 +321,10 @@ public class Frame extends JFrame {
                                     statusbar.setText("game1: working pack " + (i + 1) + " clicked");
                                     gameb.actionProvide(1, i + 7);
                                     break;
-                                } /*else {
+                                } else if (i == 6) {
                                     statusbar.setText("game1: else clicked");
                                     gameb.actionProvide(1,0);
-                                }*/
+                                }
                             }
                         } else {
                             statusbar.setText("game1: else clicked");
@@ -346,9 +345,9 @@ public class Frame extends JFrame {
                                 for (int i = 0; i<7; i++) {
                                     if ((xevent > xtmp + (i+3)*gameb.workgap + (i+3)*gameb.CWIDTH) && (xevent < xtmp + (i+3)*gameb.workgap + (i+4)*gameb.CWIDTH)) {
                                         statusbar.setText("game2: target pack " + (i + 1) + " clicked");
-                                        gameb.actionProvide(2, 2 + 3);
+                                        gameb.actionProvide(2, i + 3);
                                         break;
-                                    } else {
+                                    } else if (i == 6) {
                                         statusbar.setText("game2: else clicked");
                                         gameb.actionProvide(2, 0);
                                     }
@@ -363,7 +362,7 @@ public class Frame extends JFrame {
                                     statusbar.setText("game2: working pack " + (i + 1) + " clicked");
                                     gameb.actionProvide(2, i + 7);
                                     break;
-                                } else {
+                                } else if (i == 6) {
                                     statusbar.setText("game2: else clicked");
                                     gameb.actionProvide(2,0);
                                 }
@@ -387,9 +386,9 @@ public class Frame extends JFrame {
                                 for (int i = 0; i<7; i++) {
                                     if ((xevent > xtmp + (i+3)*gameb.workgap + (i+3)*gameb.CWIDTH) && (xevent < xtmp + (i+3)*gameb.workgap + (i+4)*gameb.CWIDTH)) {
                                         statusbar.setText("game3: target pack " + (i + 1) + " clicked");
-                                        gameb.actionProvide(3, 2 + 3);
+                                        gameb.actionProvide(3, i + 3);
                                         break;
-                                    } else {
+                                    } else if (i == 6) {
                                         statusbar.setText("game3: else clicked");
                                         gameb.actionProvide(3, 0);
                                     }
@@ -404,7 +403,7 @@ public class Frame extends JFrame {
                                     statusbar.setText("game3: working pack " + (i + 1) + " clicked");
                                     gameb.actionProvide(3, i + 7);
                                     break;
-                                } else {
+                                } else if (i == 6) {
                                     statusbar.setText("game3: else clicked");
                                     gameb.actionProvide(3,0);
                                 }
@@ -426,11 +425,11 @@ public class Frame extends JFrame {
                                 gameb.actionProvide(4, 2);
                             } else if ((xevent > xtmp + 3*gameb.workgap + 3*gameb.CWIDTH) && (xevent < xtmp + 6*gameb.workgap + 7*gameb.CWIDTH)) { // targetPacks4
                                 for (int i = 0; i<7; i++) {
-                                    if ((xevent > xtmp + (i+3)*gameb.workgap + (i+3)*gameb.CWIDTH) && (xevent < xtmp + (i+3)*gameb.workgap + (i+4)*gameb.CWIDTH)) {
+                                    if ((xevent > xtmp + (i+3)*gameb.workgap + (i+3)*gameb.CWIDTH) && (xevent < xtmp + (i+3)*gameb.workgap + (  i+4)*gameb.CWIDTH)) {
                                         statusbar.setText("game4: target pack " + (i + 1) + " clicked");
-                                        gameb.actionProvide(4, 2 + 3);
+                                        gameb.actionProvide(4, i + 3);
                                         break;
-                                    } else {
+                                    } else if (i == 6) {
                                         statusbar.setText("game4: else clicked");
                                         gameb.actionProvide(4, 0);
                                     }
@@ -445,7 +444,7 @@ public class Frame extends JFrame {
                                     statusbar.setText("game4: working pack " + (i + 1) + " clicked");
                                     gameb.actionProvide(4, i + 7);
                                     break;
-                                } else {
+                                } else if (i == 6) {
                                     statusbar.setText("game4: else clicked");
                                     gameb.actionProvide(4,0);
                                 }

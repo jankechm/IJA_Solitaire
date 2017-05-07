@@ -1,7 +1,7 @@
 package game;
 
 /**
- * Rozhraní reprezentující operaci s kartou/kartami.
+ * Rozhraní reprezentující operaci s kartami.
  * @author Marek Jankech, Jan Morávek
  */
 public interface Command {
