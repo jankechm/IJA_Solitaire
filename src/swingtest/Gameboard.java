@@ -78,8 +78,8 @@ public class Gameboard extends JComponent{
     }
 
     private void drawGame (Graphics g, KlondikeGame gameTmp, int xgap, int ygap) {
-        String dir = "src/swingtest/cards/";
-        String back = "src/swingtest/cards/back2.jpg";
+        String dir = "lib/cards/";
+        String back = "lib/cards/back2.jpg";
 
             workgap = 30;
            /*xgap = 65;

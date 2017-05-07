@@ -155,6 +155,7 @@ public class KlondikeGame implements Serializable {
    * @param fileName - název souboru
    * @return 
    */
+  @SuppressWarnings("unchecked")
   public boolean loadGame(String fileName) {
     try (FileInputStream fi = new FileInputStream(new File(fileName));
          ObjectInputStream oi = new ObjectInputStream(fi)) {

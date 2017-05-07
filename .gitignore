@@ -2,8 +2,6 @@
 /dist/
 *.save
 
-*.xml
-
 *.mf
 
 nbproject/
@@ -27,3 +25,7 @@ README\.md
 *.properties
 
 *.jpg
+
+dest-client/ija-client\.jar
+
+test/build\.xml

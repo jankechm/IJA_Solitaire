@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IJA_Solitaire" default="def" basedir=".">
+	<!-- Variables -->
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" location="lib" />
+	<property name="build.dir" location="build" />
+	<property name="dest.dir" location="dest-client" />
+	<property name="doc.dir" location="doc" />
+	<property name="main.class" value="swingtest.SwingTest" />
+	<property name="jar.file" value="ija-client.jar" />
+	
+	<!-- Classpath for libraries and compiled classes -->
+	<path id="lib.class.path">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<!-- Deletes the build, dest and test-report directories -->
+	<target name="clean">
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+			<fileset dir="${dest.dir}" includes="**/*"/>
+			<fileset dir="${doc.dir}" includes="**/*"/>
+		</delete>
+	</target>
+	
+	<!-- Creates Javadoc -->
+	<target name="javadoc">
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" encoding="UTF-8" docencoding="UTF-8" charset="UTF-8">
+			<fileset dir="${src.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</javadoc>
+	</target>
+				
+	<!-- Compiles the java classes -->
+	<target name="compile.classes" depends="clean">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="true">
+			<classpath refid="lib.class.path" />
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+	</target>
+	
+	<!-- Creates the jar file  -->
+	<target name="jar" depends="clean, compile.classes">
+		<jar destfile="${dest.dir}\${jar.file}">
+			<fileset dir="${build.dir}"/>
+			<restrict>
+			 <name name="**/*.class"/>
+			 <archives>
+				 <zips>
+					 <fileset dir="${lib.dir}" includes="**/*.jar"/>
+				 </zips>
+			 </archives>
+			</restrict>
+			<manifest>
+				<attribute name="Main-Class" value="${main.class}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- Compile all  -->
+	<target name="compile" depends="clean, compile.classes, jar, javadoc">
+	</target>
+	
+	<!-- Runs the application -->
+	<target name="run" depends="jar">
+		<java jar="${dest.dir}\${jar.file}" fork="true" failonerror="true">
+	  </java>
+	</target>
+	
+	<!-- Default target -->
+	<target name="def" depends="compile">
+	</target>
+</project>
