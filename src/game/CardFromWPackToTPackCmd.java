@@ -9,10 +9,10 @@ import model.KlondikeWorkingPack;
  * @author Marek Jankech, Jan Morávek
  */
 public class CardFromWPackToTPackCmd implements Command {
-  KlondikeWorkingPack wP;
-  KlondikeTargetPack tP;
-  Card card;
-  boolean wasFaceDown = false;
+  protected KlondikeWorkingPack wP;
+  protected KlondikeTargetPack tP;
+  protected Card card, cardUnder;
+  protected boolean wasFaceDown = false;
   
   public CardFromWPackToTPackCmd(KlondikeWorkingPack wP, KlondikeTargetPack tP) {
     this.wP = wP;
@@ -31,7 +31,7 @@ public class CardFromWPackToTPackCmd implements Command {
       this.wP.pushBack(this.card);
       return false;
     }
-    if (this.wP.get().turnFaceUp()) {
+    if ((this.cardUnder = this.wP.get()) != null && this.cardUnder.turnFaceUp()) {
       this.wasFaceDown = true;
     }
     return true;

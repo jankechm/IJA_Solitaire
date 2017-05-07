@@ -10,10 +10,10 @@ import model.KlondikeWorkingPack;
  * @author Marek Jankec, Jan Morávek
  */
 public class Hint {
-  KlondikeGame game;
-  int srcIndex = -1, destIndex = -1;
-  KlondikeGame.Selected src = KlondikeGame.Selected.NOTHING;
-  KlondikeGame.Selected dest = KlondikeGame.Selected.NOTHING;
+  protected KlondikeGame game;
+  protected int srcIndex = -1, destIndex = -1;
+  protected KlondikeGame.Selected src = KlondikeGame.Selected.NOTHING;
+  protected KlondikeGame.Selected dest = KlondikeGame.Selected.NOTHING;
   
   public Hint(KlondikeGame game) {
     this.game = game;

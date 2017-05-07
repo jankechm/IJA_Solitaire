@@ -9,9 +9,9 @@ import model.KlondikeWorkingPack;
  * @author Marek Jankech, Jan Morávek
  */
 public class CardFromWasteToWPackCmd implements Command {
-  KlondikeWaste waste;
-  KlondikeWorkingPack wP;
-  Card card;
+  protected KlondikeWaste waste;
+  protected KlondikeWorkingPack wP;
+  protected Card card;
   
   public CardFromWasteToWPackCmd(KlondikeWaste waste, KlondikeWorkingPack wP) {
     this.waste = waste;

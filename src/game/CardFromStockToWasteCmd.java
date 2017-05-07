@@ -9,9 +9,9 @@ import model.KlondikeWaste;
  * @author Marek Jankech, Jan Morávek
  */
 public class CardFromStockToWasteCmd implements Command {
-  KlondikeStock stock;
-  KlondikeWaste waste;
-  Card card;
+  protected KlondikeStock stock;
+  protected KlondikeWaste waste;
+  protected Card card;
   
   public CardFromStockToWasteCmd(KlondikeStock stock, KlondikeWaste waste) {
     this.stock = stock;

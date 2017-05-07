@@ -8,9 +8,9 @@ import model.KlondikeTargetPack;
  * @author Marek Jankech, Jan Morávek
  */
 public class CardFromTPackToTPackCmd implements Command {
-  KlondikeTargetPack tP1;
-  KlondikeTargetPack tP2;
-  Card card;
+  protected KlondikeTargetPack tP1;
+  protected KlondikeTargetPack tP2;
+  protected Card card;
   
   public CardFromTPackToTPackCmd(KlondikeTargetPack tP1, KlondikeTargetPack tP2) {
     this.tP1 = tP1;

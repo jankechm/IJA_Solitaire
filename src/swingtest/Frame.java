@@ -307,10 +307,10 @@ public class Frame extends JFrame {
                                         statusbar.setText("game1: target pack " + (i + 1) + " clicked");
                                         gameb.actionProvide(1, i + 3);
                                         break;
-                                    } else {
+                                    } /*else {
                                         statusbar.setText("game1: else clicked");
                                         gameb.actionProvide(1, 0);
-                                    }
+                                    }*/
                                 }
                             } else {
                                 statusbar.setText("game1: else clicked");
@@ -322,10 +322,10 @@ public class Frame extends JFrame {
                                     statusbar.setText("game1: working pack " + (i + 1) + " clicked");
                                     gameb.actionProvide(1, i + 7);
                                     break;
-                                } else {
+                                } /*else {
                                     statusbar.setText("game1: else clicked");
                                     gameb.actionProvide(1,0);
-                                }
+                                }*/
                             }
                         } else {
                             statusbar.setText("game1: else clicked");
