@@ -7,8 +7,8 @@ import java.util.Random;
 import java.util.Stack;
 
 /**
- *
- * @author Marek
+ * Třída reprezentující standardní balíček o velikosti 52 karet pro hru Solitaire Klondike.
+ * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeCardDeck extends AbstractKlondikeStacker implements CardDeck, Serializable{
   protected Stack<Card> cards;
@@ -105,10 +105,7 @@ public class KlondikeCardDeck extends AbstractKlondikeStacker implements CardDec
   public int size() {
     return this.cards.size();
   }
-  /**
-   * Vrací zásobník karet v zdrojovém deck balíčku.
-   * @return zásobník karet
-   */
+
   @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {
@@ -118,9 +115,7 @@ public class KlondikeCardDeck extends AbstractKlondikeStacker implements CardDec
       return this.cards;
     }
   }
-  /**
-   * Promíchá karty balíčku
-   */
+
   @Override
   public void shuffle() {
     Collections.shuffle(this.cards);

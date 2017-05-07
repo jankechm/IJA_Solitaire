@@ -7,7 +7,7 @@ import model.KlondikeWorkingPack;
 
 /**
  * Třída reprezentující nápovědu pro hru.
- * @author Marek Jankec, Jan Morávek
+ * @author Marek Jankech, Jan Morávek
  */
 public class Hint {
   protected KlondikeGame game;

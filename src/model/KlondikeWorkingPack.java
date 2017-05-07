@@ -28,13 +28,7 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
       return this.cards.lastElement();
     }
   }
-  /**
-   * Vrátí kartu na uvedenem indexu.
-   * Spodni karta je na indexu 0, vrchol je na indexu size() - 1.
-   * Pokud je balíček prázdný, nebo index mimo rozsah, vrací null.
-   * @param index - pozice karty v balíčku
-   * @return karta z vrcholu balíčku
-   */
+  
   @Override
   public Card	get(int index) {
     if (this.isEmpty() || index >= this.cards.size())
@@ -55,19 +49,14 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
       return this.cards.pop();
     }
   }
-  /**
-   * Metoda odebere ze zásobníku sekvenci karet od zadané karty až po vrchol zásobníku.
-   * Pokud je hledaná karta na vrcholu, bude v sekvenci pouze jedna karta.
-   * @param card - hledaná karta
-   * @return Zásobník karet obsahující odebranou sekvenci. Pokud hledaná karta v zásobníku není, vrací null.
-   */
+  
   @Override
   public Stack<Card> pop(Card card) {
-    int cardIndex = this.cards.indexOf(card);
+    int cardIndex = this.size() - this.cards.indexOf(card) - 1;
     Stack<Card> removedCards;
     Card c;
     
-    if (cardIndex >= 0) {
+    if (cardIndex >= 0 && cardIndex < this.size()) {
       removedCards = new Stack<>();
       for (int i = 0; i <= cardIndex; i++) {
         c = this.cards.pop();

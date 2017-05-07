@@ -63,7 +63,7 @@ public class KlondikeGame implements Serializable {
   }
   /**
    * Založí novou hru.
-   * Vytvoří objekty reprezentované hrou a inicializuje je.
+   * Vytvoří objekty používané ve hře a inicializuje je.
    */
   public void newGame() {
     this.factory = new KlondikeFactory();
@@ -126,7 +126,7 @@ public class KlondikeGame implements Serializable {
   /**
    * Načte uloženou hru z disku.
    * @param fileName - název souboru
-   * @return 
+   * @return true v případě úspěchu, jinak false
    */
   @SuppressWarnings("unchecked")
   public boolean loadGame(String fileName) {
@@ -284,7 +284,7 @@ public class KlondikeGame implements Serializable {
   }
   /**
    * Akce po kliknutí na tlačítko Undo.
-   * @return úspěch operace Undo
+   * @return true, v případě úspěchu operace Undo, jinak false
    */
   public boolean undo() {
     if ((this.command = this.undoStack.pop()) != null) {
@@ -354,14 +354,14 @@ public class KlondikeGame implements Serializable {
   }
   /**
    * Vrací instanci stock balíčku.
-   * @return instance stock balíčku.
+   * @return instance stock balíčku
    */
   public KlondikeStock getStock() {
     return this.stock;
   }
   /**
    * Vrací instanci waste stacku.
-   * @return 
+   * @return instance waste balíčku
    */
   public KlondikeWaste getWaste() {
     return this.waste;

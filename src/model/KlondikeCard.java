@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
- * @author Marek
+ * Třída reprezentující jednu kartu.
+ * Karta obsahuje informaci o své hodnotě (1 až 13) a barvě. Tyto informace jsou
+ * nastaveny konstruktorem. Hodnota 1 reprezentuje eso (ace), 11 až 13 postupně 
+ * kluk (jack), královna (queen) a král (king). Barvu definuje výčtový typ Color.
+ * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeCard implements Serializable, Card {
-  private Card.Color color;
-  private int value;
+  private final Card.Color color;
+  private final int value;
   private boolean turnedFaceUp = false;
   
   public KlondikeCard(Card.Color c, int value) {

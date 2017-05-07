@@ -5,18 +5,17 @@ import java.util.Objects;
 import java.util.Stack;
 
 /**
+ * Třáda reprezentující balíček stock.
  * Kopka karet obrácených rubem nahoru.
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeStock extends AbstractKlondikeStacker implements Serializable {
+  /**Počáteční velikost stock balíčku*/
   public static final int STD_STOCK_SIZE = 24;
-  
   protected Stack<Card> cards;
-  //protected KlondikeWaste waste;
   
   public KlondikeStock() {
     this.cards = new Stack<>();
-    //this.waste = new KlondikeWaste();
   }
 
   @Override
@@ -43,18 +42,17 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
     return true;
   }
-  
   /**
-   * 
-   * @return 
+   * Test, zda je balíček karet prázdný.
+   * @return Vrací true, pokud je balíček prázdný, jinak false
    */
   @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
   /**
-   *
-   * @return Karta na vrcholu zásobníku
+   * Vrátí kartu z vrcholu zásobníku (karta zůstává na zásobníku). Pokud je balíček prázdný, vrací null.
+   * @return Karta z vrcholu balíčku, nebo null
    */
   @Override
   public Card get() {
@@ -65,8 +63,8 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
   }
   /**
-   * Vybere kartu z vrcholu zásobníku.
-   * @return karta
+   * Odebere kartu z vrcholu balíčku. Pokud je balíček prázdný, vrací null.
+   * @return Karta z vrcholu balíčku, nebo null
    */
   @Override
   public Card pop() {
@@ -77,9 +75,9 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
   }
   /**
-   * 
-   * @param card
-   * @return 
+   * Vloží kartu na vrchol balíčku.
+   * @param card - Vkládaná karta
+   * @return Úspěšnost akce
    */
   @Override
   public boolean put(Card card) {
@@ -91,8 +89,8 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     return false;
   }
   /**
-   * Vrací zásobník karet v Stock balíčku.
-   * @return zásobník karet
+   * Vrací karty ze stock balíčku v kolekci Stack.
+   * @return karty v kolekci Stack
    */
   @Override
   public Stack<Card> getCards() {
@@ -104,8 +102,8 @@ public class KlondikeStock extends AbstractKlondikeStacker implements Serializab
     }
   }
   /**
-   * 
-   * @return 
+   * Test, zda je balíček karet prázdný.
+   * @return true, pokud je balíček prázdný, jinak false
    */
   @Override
   public int size() {

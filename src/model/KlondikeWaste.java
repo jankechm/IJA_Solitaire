@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Stack;
 
 /**
+ * Třída reprezentující waste balíček.
  * Zásobník karet potáhnutých z kopky.
  * @author Marek Jankech, Jan Morávek
  */
@@ -39,18 +40,12 @@ public class KlondikeWaste extends AbstractKlondikeStacker implements Serializab
     }
     return true;
   }
-  /**
-   *
-   * @return
-   */
+
   @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
-  /**
-   *
-   * @return Karta na vrcholu zásobníku
-   */
+
   @Override
   public Card get() {
     if (this.isEmpty())
@@ -59,10 +54,7 @@ public class KlondikeWaste extends AbstractKlondikeStacker implements Serializab
       return this.cards.lastElement();
     }
   }
-  /**
-   * Vybere kartu z vrcholu zásobníku.
-   * @return karta
-   */
+
   @Override
   public Card pop() {
     if (this.isEmpty())
@@ -71,29 +63,19 @@ public class KlondikeWaste extends AbstractKlondikeStacker implements Serializab
       return this.cards.pop();
     }
   }
-  /**
-   * 
-   * @param card
-   * @return 
-   */
+
   @Override
   public boolean put(Card card) {
     card.turnFaceUp();
     this.cards.push(card);
     return true;
   }
-  /**
-   * 
-   * @return 
-   */
+
   @Override
   public int size() {
     return this.cards.size();
   }
-  /**
-   * Vrací zásobník karet ve Waste balíčku.
-   * @return zásobník karet
-   */
+
   @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {

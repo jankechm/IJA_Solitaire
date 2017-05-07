@@ -6,7 +6,7 @@ import javax.swing.*;
 
 /**
  *
- * @author Marlliciuss
+ * @author "Jan Morávek (xmorav33)"
  */
 
 

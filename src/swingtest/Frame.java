@@ -47,7 +47,12 @@ public class Frame extends JFrame {
     Dimension min = new Dimension(5, 5);
     Dimension pref = new Dimension(900, 5);
     Dimension max = new Dimension(1000, 5);
-    
+
+    /*******************************************************************************************************************
+     * Methods creating whole frame and parts of frame (extending JFrame). Also functions changing setup of whole frame, when more game
+     * is running.
+     ******************************************************************************************************************/
+    /** Method including main frame and parts of main frame as menu, statusbar,...*/
     public Frame() {
         super("Klondike Solitaire");
 
@@ -146,6 +151,7 @@ public class Frame extends JFrame {
 
     }
 
+    /** Method is changing size of frame if necessary.*/
     public void setFrameSize() {
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0 || gameb.gameNumber == 1) {
@@ -157,6 +163,7 @@ public class Frame extends JFrame {
         }
     }
 
+    /** Method is changing if buttons are enabled or disabled as game requires.*/
     public void resolveState(){
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0) {
@@ -188,6 +195,10 @@ public class Frame extends JFrame {
         setFrameSize();
     }
 
+    /*******************************************************************************************************************
+     * Private classes implementing ActionListener, MouseListener and MouseMotionListener for whole game controlling.
+     ******************************************************************************************************************/
+    /** Private class implementing ActionListener for this game. Mostly used to handle button event.*/
     // listener for buttons
     private class ButtonHandler extends Component implements ActionListener {
             //private KlondikeGame game1;
@@ -254,7 +265,21 @@ public class Frame extends JFrame {
                     gameb.repaint();
                     gameb.gameMotion = true;
                 } else if(event.getSource()==undoGame) {
-                    statusbar.setText("Undo");
+                    if (gameb.gameActive == 1) {
+                        gameb.undoProvide(1);
+                        statusbar.setText("game1: undo");
+                    } else if (gameb.gameActive == 2) {
+                        gameb.undoProvide(2);
+                        statusbar.setText("game2: undo");
+                    } else if (gameb.gameActive == 3) {
+                        gameb.undoProvide(3);
+                        statusbar.setText("game3: undo");
+                    } else if (gameb.gameActive == 4) {
+                        gameb.undoProvide(4);
+                        statusbar.setText("game4: undo");
+                    }
+                    gameb.repaint();
+                    gameb.gameMotion = true;
                 } else if(event.getSource()==quitGame) {
                     statusbar.setText("Quit");
                     if (!gameb.quitProvide(gameb.gameActive)) {
@@ -269,14 +294,13 @@ public class Frame extends JFrame {
                 }
         }
     }
-    
+
+    /** Private class implementing MouseListener and MouseMotionListener for this game. Used to handle gameplay.*/
     private class MouseHandler implements MouseListener, MouseMotionListener {
         private int xevent;
         private int yevent;
         String saveStr = "";
-        
-        public void mouseClicked(MouseEvent event) {
-        }
+
         public void mousePressed(MouseEvent event) {
             xevent = event.getX();
             yevent = event.getY();
@@ -289,6 +313,8 @@ public class Frame extends JFrame {
                         statusbar.setText("Clicked Card Deck");
                         //gameb.drawBorder(15, 30)
                     } */
+
+                    /** game 1 control */
                     statusbar.setText(String.format("Click!! %s %s", event.getX(), event.getY()));
                     if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
                         xtmp = 15;
@@ -331,6 +357,8 @@ public class Frame extends JFrame {
                             gameb.actionProvide(1,0);
                         }
                         gameb.repaint();
+
+                        /** game 2 control */
                     } else if ((xevent > 717 && xevent < 1418) && (yevent > 47 && yevent < 452)) { // game 2
                         xtmp = 719;
                         ytmp = 52;
@@ -372,6 +400,8 @@ public class Frame extends JFrame {
                             gameb.actionProvide(2,0);
                         }
                         gameb.repaint();
+
+                        /** game 3 control */
                     } else if ((xevent > 11 && xevent < 712) && (yevent > 457 && yevent < 860)) { // game 3
                         xtmp = 15;
                         ytmp = 462;
@@ -413,6 +443,8 @@ public class Frame extends JFrame {
                             gameb.actionProvide(3,0);
                         }
                         gameb.repaint();
+
+                        /** game 4 control */
                     } else if ((xevent > 717 && xevent < 1418) && (yevent > 457 && yevent < 860)) { // game 4
                         xtmp = 719;
                         ytmp = 462;
@@ -459,6 +491,8 @@ public class Frame extends JFrame {
                         gameb.repaint();
                     }
                 }
+
+                /** if game is selected to use operations over whole game as quit, save, ... */
             } else if (SwingUtilities.isRightMouseButton(event)) {
                 gameb.gameMotion = false;
                 if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
@@ -478,20 +512,25 @@ public class Frame extends JFrame {
                     gameb.gameMotion=true;
                     statusbar.setText("Unselected games.");
                 }
+            } else if (SwingUtilities.isMiddleMouseButton(event)) {
+                if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
+                    statusbar.setText("game1: hint");
+                    gameb.hintProvide(1);
+                } else if ((xevent > 717 && xevent < 1418) && (yevent > 47 && yevent < 452)) { // game 2
+                    statusbar.setText("game2: hint");
+                    gameb.hintProvide(2);
+                } else if ((xevent > 11 && xevent < 712) && (yevent > 457 && yevent < 860)) { // game 3
+                    statusbar.setText("game3: hint");
+                    gameb.hintProvide(3);
+                } else if ((xevent > 717 && xevent < 1418) && (yevent > 457 && yevent < 860)) { // game 4
+                    statusbar.setText("game4: hint");
+                    gameb.hintProvide(4);
+                } 
             }
             resolveState();
             gameb.repaint();
         }
-        public void mouseReleased(MouseEvent event) {
-            //statusbar.setText("Released mouse!");
-        }
-        public void mouseExited(MouseEvent event) {
-            //saveStr = statusbar.getText();
-            //statusbar.setText("You are out of window!");
-        }
-        public void mouseEntered(MouseEvent event) {
-           //statusbar.setText(saveStr);
-        }
+        /** showing actual played game */
         public void mouseMoved(MouseEvent event) {
             if (gameb.gameMotion) {
                 xevent = event.getX();
@@ -511,8 +550,17 @@ public class Frame extends JFrame {
             }
             //statusbar.setText("Mouse moved");
         }
+
+        /** not necessary mouse events */
+        public void mouseClicked(MouseEvent event) {
+        }
         public void mouseDragged(MouseEvent event) {
-            //statusbar.setText("Mouse dragged!");
+        }
+        public void mouseReleased(MouseEvent event) {
+        }
+        public void mouseExited(MouseEvent event) {
+        }
+        public void mouseEntered(MouseEvent event) {
         }
     
     }

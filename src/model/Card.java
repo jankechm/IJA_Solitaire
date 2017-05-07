@@ -8,20 +8,21 @@ package model;
  * @author Marek Jankech, Jan Morávek
  */
 public interface Card {
+  /**Hodnota karty esa*/
   public static final int ACE = 1;
+  /**Hodnota karty krále*/
   public static final int KING = 13;
   /**
    * Výčtový typ reprezentující barvu karty.
    */
   public static enum Color {
-
-    /**Spides (piky). Textová reprezentace barvy je "S".*/
+    /**Clubs (kříže). Textová reprezentace barvy je "c".*/
     CLUBS,
-    /**Diamonds (káry). Textová reprezentace barvy je "D".*/
+    /**Diamonds (káry). Textová reprezentace barvy je "d".*/
     DIAMONDS,
-    /**Hearts (srdce). Textová reprezentace barvy je "H".*/
+    /**Hearts (srdce). Textová reprezentace barvy je "h".*/
     HEARTS,
-    /**Clubs (kříže). Textová reprezentace barvy je "C".*/
+    /**Spides (piky). Textová reprezentace barvy je "s".*/
     SPADES;
     
     @Override
@@ -29,10 +30,9 @@ public interface Card {
       return this.name().substring(0, 1).toLowerCase();
     }
   }
-  
   /**
    * Vrátí barvu karty
-   * @return Barva karty.
+   * @return barva karty.
    */
   Color color();
   /**

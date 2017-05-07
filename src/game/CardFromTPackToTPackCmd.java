@@ -4,7 +4,7 @@ import model.Card;
 import model.KlondikeTargetPack;
 
 /**
- * Třída reprezentuje operaci přesunu karty z cílového balíčku do cílového balíčku.
+ * Třída reprezentuje operaci přesunu karty z jednoho cílového balíčku do jiného cílového balíčku.
  * @author Marek Jankech, Jan Morávek
  */
 public class CardFromTPackToTPackCmd implements Command {

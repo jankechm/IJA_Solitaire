@@ -48,7 +48,7 @@ public class CardsFromWPackToWPackCmd implements Command {
       this.wP1.get().turnFaceDown();
     }
     this.cards = this.wP2.pop(this.card);
-    this.wP1.put(this.cards);
+    this.wP1.pushBack(this.cards);
     return true;
   }
 }

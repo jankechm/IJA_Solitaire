@@ -9,8 +9,8 @@ import java.util.Stack;
  * @author Marek Jankech, Jan Morávek
  */
 public class KlondikeTargetPack extends AbstractKlondikeStacker implements Serializable, TargetPack {
+  /**Velikost zaplněného cílového balíčku*/
   public static final int FULL_T_PACK = 13;
-  
   protected Stack<Card> cards;
   
   public KlondikeTargetPack() {
@@ -41,11 +41,7 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
     }
     return true;
   }
-  
-  /**
-   * 
-   * @return 
-   */
+
   @Override
   public Card get() {
     if (this.isEmpty())
@@ -54,10 +50,7 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
       return this.cards.lastElement();
     }
   }
-  /**
-   * Vybere kartu z vrcholu zásobníku.
-   * @return karta
-   */
+
   @Override
   public Card pop() {
     if (this.isEmpty())
@@ -66,11 +59,7 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
       return this.cards.pop();
     }
   }
-  /**
-   * 
-   * @param card
-   * @return 
-   */
+
   @Override
   public boolean put(Card card) {
     if ((this.isEmpty() && card.value() == Card.ACE) ||
@@ -81,18 +70,15 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
     return false;
   }
   /**
-   * 
-   * @param card
-   * @return 
+   * Test, zda může vložit kartu na vrchol balíčku.
+   * @param card - karta ke vložení
+   * @return - úspěšnost operace
    */
   public boolean canPut(Card card) {
     return (this.isEmpty() && card.value() == Card.ACE) ||
       (!this.isEmpty() && this.get().similarColorTo(card) && this.get().value() == card.value() - 1);
   }
-  /**
-   * 
-   * @return 
-   */
+
   @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
@@ -104,18 +90,12 @@ public class KlondikeTargetPack extends AbstractKlondikeStacker implements Seria
   public boolean isFull() {
     return this.size() >= FULL_T_PACK;
   }
-  /**
-   * 
-   * @return 
-   */
+
   @Override
   public int size() {
     return this.cards.size();
   }
-  /**
-   * Vrací zásobník karet v cílovém balíčku.
-   * @return zásobník karet
-   */
+
   @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {
