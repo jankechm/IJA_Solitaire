@@ -63,7 +63,7 @@
 	</target>
 	
 	<!-- Runs the application -->
-	<target name="run" depends="jar">
+	<target name="run">
 		<java jar="${dest.dir}\${jar.file}" fork="true" failonerror="true">
 	  </java>
 	</target>
