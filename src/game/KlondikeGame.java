@@ -184,6 +184,7 @@ public class KlondikeGame implements Serializable {
    * Akce po kliknutí na balíček stock.
    */
   public void selectedStock() {
+    System.out.println("STOCK CLICKED");
     this.command = new CardFromStockToWasteCmd(this.stock, this.waste);
     if (this.command.execute()) {
       this.undoStack.push(command);
@@ -195,10 +196,12 @@ public class KlondikeGame implements Serializable {
   public void selectedWaste() {
     //označení balíčku waste
     if (this.selSrc == Selected.NOTHING) {
+      System.out.println("WASTE SELECTED");
       this.selSrc = Selected.WASTE;
     }
     //zrušení označení
     else {
+      System.out.println("WASTE UNSELECTED");
       this.selSrc = Selected.NOTHING;
     }
   }
@@ -209,11 +212,13 @@ public class KlondikeGame implements Serializable {
   public void selectedWorkingPack(int index) {
     switch (this.selSrc) {
       case NOTHING:
+        System.out.println("NOTHING -> WORKING PACK");
         //označení prac. balíčku
         this.selSrc = Selected.WORKING_PACK;
         this.selSrcIndex = index;
         break;
       case WASTE:
+        System.out.println("WASTE -> WORKING PACK" + index);
         //operace přesunu karty z balíčku waste do prac. balíčku
         this.command = new CardFromWasteToWPackCmd(this.waste, this.getWorkingPack(index));
         if (this.command.execute()) {
@@ -222,6 +227,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       case TARGET_PACK:
+        System.out.println("TARGET PACK" + this.selSrcIndex + " -> WORKING PACK" + index);
         //operace přesunu karty z cíl. balíčku do prac. balíčku
         this.command = new CardFromTPackToWPackCmd(this.getTargetPack(this.selSrcIndex), this.getWorkingPack(index));
         if (this.command.execute()) {
@@ -230,6 +236,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       case WORKING_PACK:
+        System.out.println("WORKING PACK" + this.selSrcIndex + " -> WORKING PACK" + index);
         if (this.selSrcIndex != index) {
           //operace přesunu karet z prac. balíčku do jiného prac. balíčku
           this.command = new CardsFromWPackToWPackCmd(this.getWorkingPack(this.selSrcIndex), this.getWorkingPack(index));
@@ -240,6 +247,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       default:
+        System.out.println("WORKING PACK -> NOTHING");
         //zrušení označení
         this.selSrc = Selected.NOTHING;
         break;
@@ -252,11 +260,13 @@ public class KlondikeGame implements Serializable {
   public void selectedTargetPack(int index) {
     switch (this.selSrc) {
       case NOTHING:
+        System.out.println("NOTHING -> TARGET PACK");
         //označení cíl. balíčku
         this.selSrc = Selected.TARGET_PACK;
         this.selSrcIndex = index;
         break;
       case WASTE:
+        System.out.println("WASTE -> TARGET PACK" + index);
         //operace přesunu karty z balíčku waste do cíl. balíčku
         this.command = new CardFromWasteToTPackCmd(this.waste, this.getTargetPack(index));
         if (this.command.execute()) {
@@ -265,6 +275,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       case TARGET_PACK:
+        System.out.println("TARGET PACK" + this.selSrcIndex + " -> TARGET PACK" + index);
         if (this.selSrcIndex != index){
           //operace přesunu karty z cíl. balíčku do jíného cíl. balíčku
           this.command = new CardFromTPackToTPackCmd(this.getTargetPack(this.selSrcIndex), this.getTargetPack(index));
@@ -275,6 +286,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       case WORKING_PACK:
+        System.out.println("WORKING PACK" + this.selSrcIndex + " -> TARGET PACK" + index);
         //operace přesunu karty z prac. balíčku do cíl. balíčku
         this.command = new CardFromWPackToTPackCmd(this.getWorkingPack(this.selSrcIndex), this.getTargetPack(index));
         if (this.command.execute()) {
@@ -283,6 +295,7 @@ public class KlondikeGame implements Serializable {
         this.selSrc = Selected.NOTHING;
         break;
       default:
+        System.out.println("TARGET PACK -> NOTHING");
         //zrušení označení
         this.selSrc = Selected.NOTHING;
         break;
@@ -292,6 +305,7 @@ public class KlondikeGame implements Serializable {
    * Akce po kliknutí na prázdné místo.
    */
   public void selectedNothing() {
+    System.out.println("JUST NOTHING");
     //zrušení označení
     this.selSrc = Selected.NOTHING;
   }
