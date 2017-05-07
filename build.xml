@@ -14,7 +14,7 @@
 		<fileset dir="${lib.dir}" includes="*.jar" />
 	</path>
 
-	<!-- Deletes the build, dest and test-report directories -->
+	<!-- Deletes the contents of build, dest and doc directories -->
 	<target name="clean">
 		<delete includeemptydirs="true">
 			<fileset dir="${build.dir}" includes="**/*"/>
