@@ -41,7 +41,7 @@
 	</target>
 	
 	<!-- Creates the jar file  -->
-	<target name="jar" depends="clean, compile.classes">
+	<target name="jar" depends="compile.classes">
 		<jar destfile="${dest.dir}\${jar.file}">
 			<fileset dir="${build.dir}"/>
 			<restrict>
@@ -59,7 +59,7 @@
 	</target>
 	
 	<!-- Compile all  -->
-	<target name="compile" depends="clean, compile.classes, jar, javadoc">
+	<target name="compile" depends="jar, javadoc">
 	</target>
 	
 	<!-- Runs the application -->

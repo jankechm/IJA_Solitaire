@@ -326,9 +326,9 @@ public class Gameboard extends JComponent{
             } else if (action == 2) {
                 game1.selectedWaste();
             } else if (action >= 3 && action <= 6) {
-                game1.selectedTargetPack(index-3);
+                game1.selectedTargetPack(action-3);
             } else if (action >= 7) {
-                game1.selectedWorkingPack(index-7);
+                game1.selectedWorkingPack(action-7);
             }
             System.out.println(index);
             System.out.println(action);
@@ -340,9 +340,9 @@ public class Gameboard extends JComponent{
             } else if (action == 2) {
                 game2.selectedWaste();
             } else if (action >= 3 && action <= 6) {
-                game2.selectedTargetPack(index-3);
+                game2.selectedTargetPack(action-3);
             } else if (action >= 7) {
-                game2.selectedWorkingPack(index-7);
+                game2.selectedWorkingPack(action-7);
             }
             System.out.println(index);
             System.out.println(action);
@@ -354,9 +354,9 @@ public class Gameboard extends JComponent{
             } else if (action == 2) {
                 game3.selectedWaste();
             } else if (action >= 3 && action <= 6) {
-                game3.selectedTargetPack(index-3);
+                game3.selectedTargetPack(action-3);
             } else if (action >= 7) {
-                game3.selectedWorkingPack(index-7);
+                game3.selectedWorkingPack(action-7);
             }
             System.out.println(index);
             System.out.println(action);
@@ -368,9 +368,9 @@ public class Gameboard extends JComponent{
             } else if (action == 2) {
                 game4.selectedWaste();
             } else if (action >= 3 && action <= 6) {
-                game4.selectedTargetPack(index-3);
+                game4.selectedTargetPack(action-3);
             } else if (action >= 7) {
-                game4.selectedWorkingPack(index-7);
+                game4.selectedWorkingPack(action-7);
             }
             System.out.println(index);
             System.out.println(action);
