@@ -52,18 +52,22 @@ public class Hint {
   public boolean wPackToWPack() {
     Card card;
     KlondikeWorkingPack srcWP;
-    int cardIndex = 0;
+    int cardIndex;
     
     //iterace přes všechny prac. balíčky
     for (this.srcIndex = 0; this.srcIndex < KlondikeGame.WORKING_P_NUM; this.srcIndex++) {
       srcWP = this.game.getWorkingPack(this.srcIndex);
       this.destIndex = this.srcIndex + 1;
-      if (!srcWP.isEmpty()) {
-        card = srcWP.get(this.srcIndex);
+      if ((srcWP.size() > 1 && (!srcWP.get(srcWP.size() - 1).isTurnedFaceUp() || srcWP.get(srcWP.size() - 1).value() != Card.KING))
+         || (srcWP.size() == 1 && srcWP.get().value() != Card.KING)) {
+        cardIndex = 0;
+        card = srcWP.get(srcWP.size() - cardIndex -1);
         //hledání první karty obrácené lícem nahor v aktuálním zdroj. balíčku
+        System.out.println("Karta = " + card);
         while (!card.isTurnedFaceUp()) {
           cardIndex++;
-          card = srcWP.get(cardIndex);
+          card = srcWP.get(srcWP.size() - cardIndex -1);
+          System.out.println("Karta = " + card);
         }
         //hledání cíle pro vložení karty
         if (this.findDestWP(card)) {
@@ -81,10 +85,13 @@ public class Hint {
   protected boolean findDestWP(Card card) {
     KlondikeWorkingPack destWP;
     
+    
     //iterace přes ostatní prac. balíčky kromě zdrojového - hledání cíle pro vložení karty
     while (this.destIndex != this.srcIndex) {
+      System.out.println("Jsem v cyklu. destIndex = " + this.destIndex);
       if (this.destIndex >= KlondikeGame.WORKING_P_NUM) {
         this.destIndex = 0;
+        continue;
       }
       destWP = this.game.getWorkingPack(this.destIndex);
       if (destWP.canPut(card)) {
@@ -166,6 +173,7 @@ public class Hint {
    * @return true, pokud je možný tah, jinak false
    */
   protected boolean stockClick() {
+    this.src = KlondikeGame.Selected.STOCK;
     return (!this.game.getStock().isEmpty() || !this.game.getWaste().isEmpty());
   }
   /**

@@ -368,7 +368,7 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda, která zprostředkuje akci undo. */
+    /** Metoda, která zprostředkuje akci hint. */
     public void hintProvide(int index) {  // TODO smazat nápovědy
         if (index == 1 && gameNum1 == 1) {
             Hint hint1 = game1.hint();

@@ -26,9 +26,9 @@ public class CardsFromWPackToWPackCmd implements Command {
   @Override
   public boolean execute(){
     for (int i = 0; i < this.wP1.size(); i++) {
-      this.card = this.wP1.get(i);
+      this.card = this.wP1.get(this.wP1.size() - i - 1);
       if (this.card != null && this.card.isTurnedFaceUp() && this.wP2.canPut(this.card)) {
-        this.cards = this.wP1.pop(i);
+        this.cards = this.wP1.pop(this.wP1.size() - i - 1);
         this.wP2.put(this.cards);
         if ((this.cardUnder = this.wP1.get()) != null && this.cardUnder.turnFaceUp()) {
           this.wasFaceDown = true;
