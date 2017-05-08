@@ -104,6 +104,10 @@ public class KlondikeGame implements Serializable {
     LocalDateTime dateTime = LocalDateTime.now();
     String fileName = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-y_HH-mm-ss")) + ".save";
     
+    //Když hra ještě nebyla spuštěna, neumožnit uložení
+    if (this.stock == null) {
+      return null;
+    }
 		try (FileOutputStream fo = new FileOutputStream(new File(fileName));
          ObjectOutputStream oo = new ObjectOutputStream(fo)) {
       //Uložení stavu hry do souboru

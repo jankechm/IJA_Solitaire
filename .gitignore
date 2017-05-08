@@ -6,8 +6,6 @@
 
 nbproject/
 
-*.txt
-
 src/model/KlondikeCardStack\.java
 
 src/model/CardStack\.java
