@@ -263,7 +263,7 @@ public class Gameboard extends JComponent{
         else
         {
             try {
-                Scanner sc = new Scanner(new File(fileName));
+                Scanner sc = new Scanner(new File(fileName).getAbsolutePath());
             }
             catch (Exception e) {
                 System.out.println("Could not find file '" + fileName + "' with picture");
