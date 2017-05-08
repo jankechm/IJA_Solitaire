@@ -63,11 +63,9 @@ public class Hint {
         cardIndex = 0;
         card = srcWP.get(srcWP.size() - cardIndex -1);
         //hledání první karty obrácené lícem nahor v aktuálním zdroj. balíčku
-        System.out.println("Karta = " + card);
         while (!card.isTurnedFaceUp()) {
           cardIndex++;
           card = srcWP.get(srcWP.size() - cardIndex -1);
-          System.out.println("Karta = " + card);
         }
         //hledání cíle pro vložení karty
         if (this.findDestWP(card)) {
@@ -88,7 +86,6 @@ public class Hint {
     
     //iterace přes ostatní prac. balíčky kromě zdrojového - hledání cíle pro vložení karty
     while (this.destIndex != this.srcIndex) {
-      System.out.println("Jsem v cyklu. destIndex = " + this.destIndex);
       if (this.destIndex >= KlondikeGame.WORKING_P_NUM) {
         this.destIndex = 0;
         continue;
