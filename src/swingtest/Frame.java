@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package swingtest;
 
 import game.KlondikeGame;
@@ -14,8 +8,8 @@ import javax.swing.filechooser.*;
 
 
 /**
- *
- * @author "Jan Morávek (xmorav33)"
+ * 
+ * @author Jan Morávek (xmorav33), Marek Jankech (xjanke01)
  */
 public class Frame extends JFrame {
     
@@ -24,7 +18,6 @@ public class Frame extends JFrame {
     private JButton loadGame;
     private JButton exitGame;
     private JButton undoGame;
-    //private JButton replayGame;
     private JButton quitGame;
     private JFileChooser chooseLoad;
     private FileNameExtensionFilter filter;
@@ -38,8 +31,10 @@ public class Frame extends JFrame {
     private ButtonHandler bHandler;
     private MouseHandler mHandler;
     private Gameboard gameb;
-    //private int gameNumber = 0;
-
+    private boolean winBig = true;
+    private boolean location = false;
+    int posX=0;
+    int posY=0;
 
 
     Color blueBack = new Color(10, 75, 130);
@@ -49,10 +44,10 @@ public class Frame extends JFrame {
     Dimension max = new Dimension(1000, 5);
 
     /*******************************************************************************************************************
-     * Methods creating whole frame and parts of frame (extending JFrame). Also functions changing setup of whole frame, when more game
-     * is running.
+     * Metody vytvářející celý vzhled aplikace jako je menu, statusbar,... Zároveň obsahuje metody pro změnu tohoto
+     * okna, jako je třeba změna velikosti při více hrách.
      ******************************************************************************************************************/
-    /** Method including main frame and parts of main frame as menu, statusbar,...*/
+    /** Metoda obsahující hlavní prvky frontendu jako menu, statusbar,...*/
     public Frame() {
         super("Klondike Solitaire");
 
@@ -60,14 +55,13 @@ public class Frame extends JFrame {
         add(gameb);
 
         this.setFrameSize();
-        //gameNumber = 0;
+
 
         bHandler = new ButtonHandler();
         mHandler = new MouseHandler();
         this.addMouseListener(mHandler);
         this.addMouseMotionListener(mHandler);
-        //setSize(1280,720);
-        
+
         // top panel - only for making gap on top
         topPanelSpace = new JPanel();
         topPanelSpace.setLayout(new BoxLayout(topPanelSpace, BoxLayout.PAGE_AXIS));
@@ -151,19 +145,25 @@ public class Frame extends JFrame {
 
     }
 
-    /** Method is changing size of frame if necessary.*/
+    /** Metoda mění velikost okna podle stavu hry.*/
     public void setFrameSize() {
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0 || gameb.gameNumber == 1) {
-            this.setSize(720, 455);
-            this.setLocationRelativeTo(null);
+            if (winBig) {
+                this.setSize(720, 455);
+                this.setLocationRelativeTo(null);
+                winBig = false;
+            }
         } else if (gameb.gameNumber > 1) {
-            this.setSize(1425, 880);
-            this.setLocationRelativeTo(null);
+            if (!winBig) {
+                this.setSize(1425, 880);
+                this.setLocationRelativeTo(null);
+                winBig = true;
+            }
         }
     }
 
-    /** Method is changing if buttons are enabled or disabled as game requires.*/
+    /** Metoda mění přístupnost tlačítek podle stavu hry.*/
     public void resolveState(){
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0) {
@@ -186,19 +186,36 @@ public class Frame extends JFrame {
         } else if (!gameb.gameMotion) {
             loadGame.setEnabled(true);
             newGame.setEnabled(true);
+            undoGame.setEnabled(true);
+            quitGame.setEnabled(true);
+            saveGame.setEnabled(true);
             if (gameb.gameNumber>0) {
-                undoGame.setEnabled(true);
-                quitGame.setEnabled(true);
-                saveGame.setEnabled(true);
+                if (gameb.gameActive == 1 && gameb.gameNum1 == 0) {
+                    undoGame.setEnabled(false);
+                    quitGame.setEnabled(false);
+                    saveGame.setEnabled(false);
+                } else if (gameb.gameActive == 2 && gameb.gameNum2 == 0) {
+                    undoGame.setEnabled(false);
+                    quitGame.setEnabled(false);
+                    saveGame.setEnabled(false);
+                } else if (gameb.gameActive == 3 && gameb.gameNum3 == 0) {
+                    undoGame.setEnabled(false);
+                    quitGame.setEnabled(false);
+                    saveGame.setEnabled(false);
+                } else if (gameb.gameActive == 4 && gameb.gameNum4 == 0){
+                    undoGame.setEnabled(false);
+                    quitGame.setEnabled(false);
+                    saveGame.setEnabled(false);
+                }
             }
         }
         setFrameSize();
     }
 
     /*******************************************************************************************************************
-     * Private classes implementing ActionListener, MouseListener and MouseMotionListener for whole game controlling.
+     * Třídy pro naslouchání na tlačítkách a celé ploše hry. Využíváno pro ovládání tlačítek a samotné hry.
      ******************************************************************************************************************/
-    /** Private class implementing ActionListener for this game. Mostly used to handle button event.*/
+    /** Private class implementing ActionListener*/
     // listener for buttons
     private class ButtonHandler extends Component implements ActionListener {
             //private KlondikeGame game1;
@@ -223,10 +240,13 @@ public class Frame extends JFrame {
                     //gameb.newProvide(gameNumber);
                     gameb.repaint();
                     gameb.gameMotion = true;
+                    resolveState();
+                    System.out.println("" + gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4); // TODO smazat
                 } else if(event.getSource()==saveGame) {
-                    statusbar.setText("Game saved."); // TODO  přidat do výpisu string, jak se jmenuje ten uložený soubor
-                    gameb.saveProvide(gameb.gameActive);
+                    String fileName = gameb.saveProvide(gameb.gameActive);
+                    statusbar.setText("Game saved: " + fileName);
                     gameb.gameMotion = true;
+                    resolveState();
                 } else if(event.getSource()==loadGame) {
                     gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
                     statusbar.setText("Load Game.");
@@ -264,6 +284,7 @@ public class Frame extends JFrame {
                     }
                     gameb.repaint();
                     gameb.gameMotion = true;
+                    resolveState();
                 } else if(event.getSource()==undoGame) {
                     if (gameb.gameActive == 1) {
                         gameb.undoProvide(1);
@@ -279,7 +300,6 @@ public class Frame extends JFrame {
                         statusbar.setText("game4: undo");
                     }
                     gameb.repaint();
-                    gameb.gameMotion = true;
                 } else if(event.getSource()==quitGame) {
                     statusbar.setText("Quit");
                     if (!gameb.quitProvide(gameb.gameActive)) {
@@ -288,6 +308,7 @@ public class Frame extends JFrame {
                     resolveState();
                     gameb.repaint();
                     gameb.gameMotion = true;
+                    resolveState();
                 } else if(event.getSource()==exitGame) {
                     statusbar.setText("Exit Game.");
                     System.exit(0);
@@ -295,7 +316,7 @@ public class Frame extends JFrame {
         }
     }
 
-    /** Private class implementing MouseListener and MouseMotionListener for this game. Used to handle gameplay.*/
+    /** Private class implementing MouseListener and MouseMotionListener.*/
     private class MouseHandler implements MouseListener, MouseMotionListener {
         private int xevent;
         private int yevent;
@@ -306,15 +327,11 @@ public class Frame extends JFrame {
             yevent = event.getY();
             int xtmp = 0;
             int ytmp = 0;
+            int yworkSize = -1;
             if (SwingUtilities.isLeftMouseButton(event)) {
                 if (gameb.gameMotion) {
-                    /*
-                    if ((xevent > 15 && xevent < 88) && (yevent > 71 && yevent < 168)) {
-                        statusbar.setText("Clicked Card Deck");
-                        //gameb.drawBorder(15, 30)
-                    } */
 
-                    /** game 1 control */
+                    // game 1 control
                     statusbar.setText(String.format("Click!! %s %s", event.getX(), event.getY()));
                     if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
                         xtmp = 15;
@@ -341,24 +358,27 @@ public class Frame extends JFrame {
                                 statusbar.setText("game1: else clicked");
                                 gameb.actionProvide(1,0);
                             }
-                        } else if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10) { // workingPacks1
-                            for (int i = 0; i<7; i++) {
-                                if ((xevent > xtmp + i*gameb.workgap + i*gameb.CWIDTH) && (xevent < xtmp + i*gameb.workgap + (i+1)*gameb.CWIDTH)) {
-                                    statusbar.setText("game1: working pack " + (i + 1) + " clicked");
-                                    gameb.actionProvide(1, i + 7);
-                                    break;
+                        } else {
+                            for (int i = 0; i < 7; i++) {
+                                yworkSize = gameb.workSizeProvide(1, i);//gameb.game1.getWorkingPack(i - 1).size();
+                                if ((xevent > xtmp + i * gameb.workgap + i * gameb.CWIDTH) && (xevent < xtmp + i * gameb.workgap + (i + 1) * gameb.CWIDTH)) {
+                                    if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2 * gameb.CHEIGHT + 10 + 17*(yworkSize-1)) {
+                                        statusbar.setText("game1: working pack " + (i + 1) + " clicked");
+                                        gameb.actionProvide(1, i + 7);
+                                        break;
+                                    } else if (i == 6) {
+                                        statusbar.setText("game1: else clicked");
+                                        gameb.actionProvide(1, 0);
+                                    }
                                 } else if (i == 6) {
                                     statusbar.setText("game1: else clicked");
-                                    gameb.actionProvide(1,0);
+                                    gameb.actionProvide(1, 0);
                                 }
                             }
-                        } else {
-                            statusbar.setText("game1: else clicked");
-                            gameb.actionProvide(1,0);
                         }
                         gameb.repaint();
 
-                        /** game 2 control */
+                        // game 2 control
                     } else if ((xevent > 717 && xevent < 1418) && (yevent > 47 && yevent < 452)) { // game 2
                         xtmp = 719;
                         ytmp = 52;
@@ -384,24 +404,27 @@ public class Frame extends JFrame {
                                 statusbar.setText("game2: else clicked");
                                 gameb.actionProvide(2,0);
                             }
-                        } else if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10) { // workingPacks2
+                        } else {  // workingPacks2
                             for (int i = 0; i<7; i++) {
-                                if ((xevent > xtmp + i*gameb.workgap + i*gameb.CWIDTH) && (xevent < xtmp + i*gameb.workgap + (i+1)*gameb.CWIDTH)) {
-                                    statusbar.setText("game2: working pack " + (i + 1) + " clicked");
-                                    gameb.actionProvide(2, i + 7);
-                                    break;
+                                yworkSize = gameb.workSizeProvide(1, i);//gameb.game1.getWorkingPack(i - 1).size();
+                                if ((xevent > xtmp + i*gameb.workgap + i*gameb.CWIDTH) && (xevent < xtmp + i*gameb.workgap + (i+1)*gameb.CWIDTH )) {
+                                    if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10 + 17*(yworkSize-1)) {
+                                        statusbar.setText("game2: working pack " + (i + 1) + " clicked");
+                                        gameb.actionProvide(2, i + 7);
+                                        break;
+                                    } else if (i == 6){
+                                        statusbar.setText("game2: else clicked");
+                                        gameb.actionProvide(2,0);
+                                    }
                                 } else if (i == 6) {
                                     statusbar.setText("game2: else clicked");
                                     gameb.actionProvide(2,0);
                                 }
                             }
-                        } else {
-                            statusbar.setText("game2: else clicked");
-                            gameb.actionProvide(2,0);
                         }
                         gameb.repaint();
 
-                        /** game 3 control */
+                        // game 3 control
                     } else if ((xevent > 11 && xevent < 712) && (yevent > 457 && yevent < 860)) { // game 3
                         xtmp = 15;
                         ytmp = 462;
@@ -427,24 +450,27 @@ public class Frame extends JFrame {
                                 statusbar.setText("game3: else clicked");
                                 gameb.actionProvide(3,0);
                             }
-                        } else if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10) { // workingPacks3
+                        } else { // workingPacks3
                             for (int i = 0; i<7; i++) {
+                                yworkSize = gameb.workSizeProvide(1, i);//gameb.game1.getWorkingPack(i - 1).size();
                                 if ((xevent > xtmp + i*gameb.workgap + i*gameb.CWIDTH) && (xevent < xtmp + i*gameb.workgap + (i+1)*gameb.CWIDTH)) {
-                                    statusbar.setText("game3: working pack " + (i + 1) + " clicked");
-                                    gameb.actionProvide(3, i + 7);
-                                    break;
+                                    if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10 + 17*(yworkSize-1)) {
+                                        statusbar.setText("game3: working pack " + (i + 1) + " clicked");
+                                        gameb.actionProvide(3, i + 7);
+                                        break;
+                                    } else if (i == 6) {
+                                        statusbar.setText("game3: else clicked");
+                                        gameb.actionProvide(3,0);
+                                    }
                                 } else if (i == 6) {
                                     statusbar.setText("game3: else clicked");
                                     gameb.actionProvide(3,0);
                                 }
                             }
-                        } else {
-                            statusbar.setText("game3: else clicked");
-                            gameb.actionProvide(3,0);
                         }
                         gameb.repaint();
 
-                        /** game 4 control */
+                        // game 4 control
                     } else if ((xevent > 717 && xevent < 1418) && (yevent > 457 && yevent < 860)) { // game 4
                         xtmp = 719;
                         ytmp = 462;
@@ -470,20 +496,23 @@ public class Frame extends JFrame {
                                 statusbar.setText("game4: else clicked");
                                 gameb.actionProvide(4,0);
                             }
-                        } else if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10) { // workingPacks4
+                        } else { // workingPacks4
                             for (int i = 0; i<7; i++) {
+                                yworkSize = gameb.workSizeProvide(1, i);//gameb.game1.getWorkingPack(i - 1).size();
                                 if ((xevent > xtmp + i*gameb.workgap + i*gameb.CWIDTH) && (xevent < xtmp + i*gameb.workgap + (i+1)*gameb.CWIDTH)) {
-                                    statusbar.setText("game4: working pack " + (i + 1) + " clicked");
-                                    gameb.actionProvide(4, i + 7);
-                                    break;
+                                    if (yevent > ytmp + gameb.CHEIGHT + 10 && yevent < ytmp + 2*gameb.CHEIGHT + 10 + 17*(yworkSize-1)) {
+                                        statusbar.setText("game4: working pack " + (i + 1) + " clicked");
+                                        gameb.actionProvide(4, i + 7);
+                                        break;
+                                    } else if (i==6) {
+                                        statusbar.setText("game4: else clicked");
+                                        gameb.actionProvide(4,0);
+                                    }
                                 } else if (i == 6) {
                                     statusbar.setText("game4: else clicked");
                                     gameb.actionProvide(4,0);
                                 }
                             }
-                        } else {
-                            statusbar.setText("game4: else clicked");
-                            gameb.actionProvide(4,0);
                         }
                         gameb.repaint();
                     } else {
@@ -491,8 +520,11 @@ public class Frame extends JFrame {
                         gameb.repaint();
                     }
                 }
+                if (!gameb.gameMotion) {
+                    gameb.gameMotion = true;
+                }
 
-                /** if game is selected to use operations over whole game as quit, save, ... */
+                /** Hra je označena pro využití jednotlivých operací jako uložení, ... */
             } else if (SwingUtilities.isRightMouseButton(event)) {
                 gameb.gameMotion = false;
                 if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
@@ -513,24 +545,36 @@ public class Frame extends JFrame {
                     statusbar.setText("Unselected games.");
                 }
             } else if (SwingUtilities.isMiddleMouseButton(event)) {
-                if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
-                    statusbar.setText("game1: hint");
-                    gameb.hintProvide(1);
-                } else if ((xevent > 717 && xevent < 1418) && (yevent > 47 && yevent < 452)) { // game 2
-                    statusbar.setText("game2: hint");
-                    gameb.hintProvide(2);
-                } else if ((xevent > 11 && xevent < 712) && (yevent > 457 && yevent < 860)) { // game 3
-                    statusbar.setText("game3: hint");
-                    gameb.hintProvide(3);
-                } else if ((xevent > 717 && xevent < 1418) && (yevent > 457 && yevent < 860)) { // game 4
-                    statusbar.setText("game4: hint");
-                    gameb.hintProvide(4);
-                } 
+                if ((xevent > 0 && xevent < 1500) && (yevent > 0 && yevent < 30)) {
+                    location = true;
+                    posX = event.getX();
+                    posY = event.getY();
+                } else {
+                    if (!gameb.showHint) {
+                        gameb.showHint = true;
+                        if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
+                            statusbar.setText("game1: hint");
+                            gameb.showHint = true;
+                        } else if ((xevent > 717 && xevent < 1418) && (yevent > 47 && yevent < 452)) { // game 2
+                            statusbar.setText("game2: hint");
+                            gameb.showHint = true;
+                        } else if ((xevent > 11 && xevent < 712) && (yevent > 457 && yevent < 860)) { // game 3
+                            statusbar.setText("game3: hint");
+                            gameb.showHint = true;
+                        } else if ((xevent > 717 && xevent < 1418) && (yevent > 457 && yevent < 860)) { // game 4
+                            statusbar.setText("game4: hint");
+                            gameb.showHint = true;
+                        }
+                    } else if (gameb.showHint) {
+                        gameb.showHint = false;
+                    }
+                }
             }
-            resolveState();
-            gameb.repaint();
+                resolveState();
+                gameb.repaint();
+
         }
-        /** showing actual played game */
+        /** Vykresluje ohraničení hry, kde se zrovna nachází myš. */
         public void mouseMoved(MouseEvent event) {
             if (gameb.gameMotion) {
                 xevent = event.getX();
@@ -547,26 +591,28 @@ public class Frame extends JFrame {
                     gameb.gameActive = 0;
                 }
                 repaint();
+                resolveState();
             }
-            //statusbar.setText("Mouse moved");
         }
 
-        /** not necessary mouse events */
+        /** Nepotřebné operace myší.    */
         public void mouseClicked(MouseEvent event) {
         }
         public void mouseDragged(MouseEvent event) {
+            if (location) {
+                setLocation(event.getXOnScreen() - posX, event.getYOnScreen() - posY);
+            }
         }
         public void mouseReleased(MouseEvent event) {
+            location = false;
         }
         public void mouseExited(MouseEvent event) {
         }
         public void mouseEntered(MouseEvent event) {
         }
-    
+
     }
 }
-
-
  /*
                         Object[] options = {"Game 1", "Game 2", "Game 3", "Game 4"};
                         int choice = JOptionPane.showOptionDialog(null, //Component parentComponent
@@ -590,3 +636,24 @@ public class Frame extends JFrame {
                             gameb.newProvide(4);
                             System.out.println("choice 4");
                         } */
+
+
+ /*
+                header.addMouseListener(new MouseAdapter()
+                {
+                    public void mousePressed(MouseEvent e)
+                    {
+                        posX=e.getX();
+                        posY=e.getY();
+                    }
+                });
+
+                header.addMouseMotionListener(new MouseAdapter()
+                {
+                    public void mouseDragged(MouseEvent evt)
+                    {
+                        //sets frame position when mouse dragged
+                        setLocation (evt.getXOnScreen()-posX,evt.getYOnScreen()-posY);
+                    }
+                });
+                */

@@ -16,10 +16,6 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
     this.cards = new Stack<>();
   }
   
-  /**
-   * 
-   * @return 
-   */
   @Override
   public Card get() {
     if (this.isEmpty())
@@ -37,10 +33,7 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
       return this.cards.elementAt(this.cards.size() - index - 1);
     }
   }
-  /**
-   * Vybere kartu z vrcholu zásobníku.
-   * @return karta
-   */
+
   @Override
   public Card pop() {
     if (this.isEmpty())
@@ -89,11 +82,7 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
     else
       return null;
   }
-  /**
-   * 
-   * @param card
-   * @return 
-   */
+
   @Override
   public boolean put(Card card) {
     if ((this.isEmpty() && card.value() == Card.KING) ||
@@ -112,11 +101,7 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
     return (this.isEmpty() && card.value() == Card.KING) ||
       (!this.isEmpty() && !this.get().similarColorTo(card) && this.get().value() - 1 == card.value());
   }
-  /**
-   * 
-   * @param cards
-   * @return 
-   */
+
   @Override
   public boolean put(Stack<Card> cards) {
     if ((this.isEmpty() && cards.firstElement().value() == Card.KING) ||
@@ -127,11 +112,7 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
     }
     return false;
   }
-  /**
-   * 
-   * @param card
-   * @return 
-   */
+  
   @Override
   public boolean pushInit(Card card) {
     if (this.size() < this.initSize) {
@@ -141,23 +122,20 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
     return false;
   }
   /**
-   * Vrací kartu nazpět do tohoto balíčku, po neúspěšném přesunu.
+   * Vloží kartu tohoto balíčku, bez jakýchkoli kontrol.
    * @param card - vrácená karta
    */
   public void pushBack(Card card) {
     this.cards.push(card);
   }
   /**
-   * Vrací karty nazpět do tohoto balíčku, po neúspěšném přesunu.
+   * Vloží zásobník karet do tohoto balíčku, bez jakýchkoli kontrol.
    * @param cards - vrácené karty
    */
   public void pushBack(Stack<Card> cards) {
     this.cards.addAll(cards);
   }
-  /**
-   * Otočí kartu na vrcholu lícem nahoru.
-   * @return 
-   */
+  
   @Override
   public boolean turnFaceUp() {
     Card card = this.get();
@@ -166,26 +144,17 @@ public class KlondikeWorkingPack extends AbstractKlondikeStacker implements Work
       return card.turnFaceUp();
     return false;
   }
-  /**
-   * 
-   * @return 
-   */
+ 
   @Override
   public boolean isEmpty() {
     return this.cards.isEmpty();
   }
-  /**
-   * 
-   * @return 
-   */
+
   @Override
   public int size() {
     return this.cards.size();
   }
-  /**
-   * Vrací zásobník karet v pracovním balíčku.
-   * @return zásobník karet
-   */
+
   @Override
   public Stack<Card> getCards() {
     if (this.isEmpty()) {

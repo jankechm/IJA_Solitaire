@@ -34,7 +34,7 @@
 				
 	<!-- Compiles the java classes -->
 	<target name="compile.classes" depends="clean">
-		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="true">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="true" encoding="UTF-8">
 			<classpath refid="lib.class.path" />
 			<compilerarg value="-Xlint:unchecked"/>
 		</javac>

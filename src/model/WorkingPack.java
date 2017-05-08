@@ -3,7 +3,7 @@ package model;
 import java.util.Stack;
 
 /**
- *
+ * Rozhraní reprezentující pracovní balíček.
  * @author Marek Jankech, Jan Morávek
  */
 public interface WorkingPack extends TargetPack {
@@ -30,10 +30,14 @@ public interface WorkingPack extends TargetPack {
    */
   boolean put(Stack<Card> cards);
   /**
-   * 
-   * @param card
-   * @return 
+   * Vloží kartu na vrchol balíčku.
+   * @param card - karta ke vložení
+   * @return - úspěšnost operace
    */
   boolean pushInit(Card card);
+  /**
+   * Otočí kartu na vrcholu lícem nahoru.
+   * @return informace, zda došlo k otočení
+   */
   boolean turnFaceUp();
 }

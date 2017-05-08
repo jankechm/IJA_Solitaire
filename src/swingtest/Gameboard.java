@@ -8,41 +8,33 @@ package swingtest;
 
 import game.Hint;
 import game.KlondikeGame;
-import model.KlondikeTargetPack;
-import model.KlondikeWorkingPack;
-import model.TargetPack;
-import swingtest.Frame;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author "Jan Morávek (xmorav33)"
+ * @author Jan Morávek (xmorav33), Marek Jankech (xjanke01)
  */
 public class Gameboard extends JComponent{
     
     public static final int CWIDTH = 73;
 	public static final int CHEIGHT = 97;
-    //private int xgap = 20;
-    //private int ygap = 20;
     private int xd = 0;
     private int yd = 0;
     public int workgap = 30;
     private int i;
     private int j;
     private int k;
-    private int m;
     private KlondikeGame game1;
     private KlondikeGame game2;
     private KlondikeGame game3;
     private KlondikeGame game4;
-    /*private Hint hint1;
-    private Hint hint2;
-    private Hint hint3;
-    private Hint hint4; */
+    public boolean showHint = false;
+    public int saveHintSrc = -1;
+    public int saveHintDest = -1;
     public int gameNumber = 0;
     public int gameNum1 = 0;
     public int gameNum2 = 0;
@@ -54,7 +46,7 @@ public class Gameboard extends JComponent{
     private String namerino = "";
     Color blueBack = new Color(10, 75, 130);
 
-    /** Method is called by repaint() method and is calling necessary methods for game board drawing*/
+    /** Metoda volaná pomocí repaint(). Zajišťuje volání ostatních metod pro vykreslení hry*/
     public void paint(Graphics g) { // drawRect(x, y, width, height);
         g.setColor(blueBack);
         gameNumber = gameNum1 + gameNum2 + gameNum3 + gameNum4;
@@ -64,15 +56,20 @@ public class Gameboard extends JComponent{
             g.fillRect(0, 0, getWidth(), getHeight());
             drawNoGame(g, 15, 10);
         } else if (gameNumber == 1) {
-            if (gameNum1==1) {
-                drawGame(g, game1, 15, 10);
-            } else if (gameNum2==1) {
-                drawGame(g, game2, 15, 10);
+            if (gameNum2==1) {
+                game1 = game2;
+                gameNum1 = 1;
+                gameNum2 = 0;
             } else if (gameNum3==1) {
-                drawGame(g, game3, 15, 10);
+                game1 = game3;
+                gameNum1 = 1;
+                gameNum3 = 0;
             } else if (gameNum4==1) {
-                drawGame(g, game4, 15, 10);
+                game1 = game4;
+                gameNum1 = 1;
+                gameNum4 = 0;
             }
+            drawGame(g, game1, 15, 10);
         } else if (gameNumber > 1) {
             drawGameBorder(g);
             //if (gameNum1 == 1)
@@ -88,13 +85,15 @@ public class Gameboard extends JComponent{
 
 
     /*******************************************************************************************************************
-     * Methods for drawing game board, game cards, and borders of selected games and cards.
+     * Metody pro vykreslení celé hry. Obsahuje metody pro vykreslení hrací plochy, vykreslení karet, vykreslení
+     * ohraničení a nápovědy.
      ******************************************************************************************************************/
-    /** Method draws whole game board.*/
+    /** Metoda vykreslující celou hrací plochu.*/
     private void drawGame (Graphics g, KlondikeGame gameTmp, int xgap, int ygap) {
         String dir = "lib/cards/";
         String back = "lib/cards/back2.jpg";
         resolveBorder(gameTmp);
+        resolveHint(gameTmp);
 
             workgap = 30;
             // draw stock
@@ -107,6 +106,9 @@ public class Gameboard extends JComponent{
                 namerino = "";
             }
             drawCard(g, namerino, xd, yd);
+            if (showHint && saveHintSrc == 1) {
+                drawHintBorder(g, xd, yd);
+            }
 
             // draw waste
             xd = xgap + workgap + CWIDTH;
@@ -120,7 +122,10 @@ public class Gameboard extends JComponent{
                 namerino = "";
             }
             if (selectedCard == 2) {
-                    drawCardBorder(g, xd, yd);
+                drawCardBorder(g, xd, yd);
+            }
+            if (showHint && saveHintSrc == 2) {
+                drawHintBorder(g, xd, yd);
             }
 
             // target packs
@@ -139,6 +144,11 @@ public class Gameboard extends JComponent{
                 drawCard(g, namerino, xd, yd);
                 if (selectedCard == i+2) {
                     drawCardBorder(g, xd, yd);
+                }
+                if (showHint && (saveHintSrc == 2 || saveHintSrc >6)) {
+                    if (saveHintDest == i + 2) {
+                        drawHintBorder(g, xd, yd);
+                    }
                 }
             }
 
@@ -171,6 +181,18 @@ public class Gameboard extends JComponent{
                         if (selectedCard == i+6 && j==k) {
                             drawCardBorder(g, xd, yd);
                         }
+                        if (showHint && saveHintSrc == 2) {
+                            if (saveHintDest == i + 6 && j==k) {
+                                drawHintBorder(g, xd, yd);
+                            }
+                        } else if (showHint && saveHintSrc > 6) {
+                            if (saveHintSrc == i + 6 && j==k) {
+                                drawHintBorder(g, xd, yd);
+                            }
+                            if (saveHintDest == i + 6 && j==k) {
+                                drawHintBorder(g, xd, yd);
+                            }
+                        }
                     }
                 } catch (Exception ee) {
                     namerino = "";
@@ -179,7 +201,7 @@ public class Gameboard extends JComponent{
             }
     }
 
-    /** Method draws no game.*/
+    /** Metoda vykresluje žádnou hru.*/
     private void drawNoGame (Graphics g, int xgap, int ygap) {
         namerino = "";
         workgap = 30;
@@ -210,7 +232,7 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Method draws cards on game boards.*/
+    /** Metoda vykresluje jednotlivé karty na zadané souřadnice. */
     private void drawCard(Graphics g, String fileName, int x, int y)
     {
         if (fileName == "")
@@ -231,7 +253,7 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Method draws game border of selected game.*/
+    /** Metoda pro vykreslení ohraničení her.*/
     public void drawGameBorder (Graphics g) {
         if (gameActive == 0) {
             g.drawRect(10,5,1407,815);
@@ -251,7 +273,7 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Method draws border of selected card in game.*/
+    /** Metody vykreslující ohraničení karty*/
     private void drawCardBorder (Graphics g, int x, int y) {
         g.setColor(blueBack);
         g.drawRect(x, y, CWIDTH, CHEIGHT);
@@ -259,41 +281,53 @@ public class Gameboard extends JComponent{
         g.drawRect(x + 1, y + 1, CWIDTH - 2, CHEIGHT - 2);
         g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
     }
+    private void drawHintBorder (Graphics g, int x, int y) {
+        g.setColor(Color.yellow);
+        //g.setColor(new Color (240,240,240));
+        g.drawRect(x, y, CWIDTH, CHEIGHT);
+
+        g.drawRect(x + 1, y + 1, CWIDTH - 2, CHEIGHT - 2);
+        g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
+    }
 
     /*******************************************************************************************************************
-     * Methods providing acces to Klondike game objects and apllying requested operations from Frame to KlondikeGame
-     * objects
+     * Metody pro přístup k instancím třídy KlondikeGame. Zároveň část problému při operacích s těmito instancemi.
      ******************************************************************************************************************/
-    /** Method providing creating of new game.*/
+    /** Metoda, která zajistí vytvoření nové hry.*/
     public void newProvide(int index) {
-        if (index == 1) {
-            if (gameNum1==0) {
-                game1 = new KlondikeGame();
-            }
-            game1.newGame();
-            gameNum1 = 1;
-        } else if (index == 2) {
-            if (gameNum2==0) {
-                game2 = new KlondikeGame();
-            }
-            game2.newGame();
-            gameNum2 = 1;
-        } else if (index == 3) {
-            if (gameNum3==0) {
-                game3 = new KlondikeGame();
-            }
-            game3.newGame();
-            gameNum3 = 1;
-        } else if (index == 4) {
-            if (gameNum4==0) {
-                game4 = new KlondikeGame();
-            }
-            game4.newGame();
-            gameNum4 = 1;
+        switch (index) {
+            case 1:
+                if (gameNum1==0) {
+                    game1 = new KlondikeGame();
+                }
+                game1.newGame();
+                gameNum1 = 1;
+                break;
+            case 2:
+                if (gameNum2==0) {
+                    game2 = new KlondikeGame();
+                }
+                game2.newGame();
+                gameNum2 = 1;
+                break;
+            case 3:
+                if (gameNum3==0) {
+                    game3 = new KlondikeGame();
+                }
+                game3.newGame();
+                gameNum3 = 1;
+                break;
+            case 4:
+                if (gameNum4==0) {
+                    game4 = new KlondikeGame();
+                }
+                game4.newGame();
+                gameNum4 = 1;
+                break;
         }
     }
 
-    /** Method providing load of game.*/
+    /** Metoda zajišťující nahrání hry.*/
     public void loadProvide(int index, String nameFile) {
         quitProvide(index);
         newProvide(index);
@@ -313,25 +347,27 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Method providing save of game.*/
-    public void saveProvide(int index) {
+    /** Metoda zajišťující novou hru.*/
+    public String saveProvide(int index) {
+        String fileName = "";
         switch (index) {
             case 1:
-                game1.saveGame();
+                fileName = game1.saveGame();
                 break;
             case 2:
-                game2.saveGame();
+                fileName = game2.saveGame();
                 break;
             case 3:
-                game3.saveGame();
+                fileName = game3.saveGame();
                 break;
             case 4:
-                game4.saveGame();
+                fileName = game4.saveGame();
                 break;
         }
+        return fileName;
     }
 
-    /** Method providing quit of game.*/
+    /** Metoda zajišťující ukončení hry*/
     public boolean quitProvide(int index) {
         if (index == 1 && gameNum1 == 1) {
             game1.quitGame();
@@ -355,6 +391,21 @@ public class Gameboard extends JComponent{
         return true;
     }
 
+    /** Metoda využívaná pro získání velikosti working packu ke změně plochy pro kliknutí. */
+    public int workSizeProvide(int index, int i) {
+        if (index == 1 && gameNum1 == 1) {
+            return game1.getWorkingPack(i).size();
+        } else if (index == 2 && gameNum2 == 1) {
+            return game2.getWorkingPack(i).size();
+        } else if (index == 3 && gameNum3 == 1) {
+            return game3.getWorkingPack(i).size();
+        } else if (index == 4 && gameNum4 == 1) {
+            return game4.getWorkingPack(i).size();
+        } else {
+            return -1;
+        }
+    }
+
     /** Metoda, která zprostředkuje akci undo. */
     public void undoProvide(int index) {
         if (index == 1 && gameNum1 == 1) {
@@ -368,35 +419,7 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda, která zprostředkuje akci hint. */
-    public void hintProvide(int index) {  // TODO smazat nápovědy
-        if (index == 1 && gameNum1 == 1) {
-            Hint hint1 = game1.hint();
-            if (hint1 == null) {
-                System.out.println("game1: no possible hint");
-            } else if (hint1.getSrc() == KlondikeGame.Selected.STOCK) {
-                System.out.println("STOCK SELECTED");
-            } else if (hint1.getSrc() == KlondikeGame.Selected.WASTE) {
-                hint1.getDest().toString();
-                hint1.getDestIndex();
-                System.out.println("WASTE " + hint1.getDest().toString()+ "" + hint1.getDestIndex());
-            } else if (hint1.getSrc() == KlondikeGame.Selected.WORKING_PACK) {
-                hint1.getDest();
-                hint1.getDestIndex();
-                hint1.getSrcIndex();
-                System.out.println("WORKING PACK" + hint1.getSrcIndex() + " " + hint1.getDest().toString() + hint1.getDestIndex());
-            }
-        } else if (index == 2 && gameNum2 == 1) {
-            Hint hint2 = game2.hint();
-        } else if (index == 3 && gameNum3 == 1) {
-            Hint hint3 = game3.hint();
-        } else if (index == 4 && gameNum4 == 1) {
-            Hint hint4 = game4.hint();
-        }
-        System.out.println("hint provide" + index);
-    }
-
-    /** Method apllies requested operations over selected game.*/
+    /** Metoda zajišťující provedení operací nad instancemi her.*/
     public void actionProvide (int index, int action) {
         System.out.printf("GAME%d: action: %d\n", index, action);
         if (index == 1 && gameNum1 == 1) {
@@ -408,6 +431,11 @@ public class Gameboard extends JComponent{
                 game1.selectedWaste();
             } else if (action >= 3 && action <= 6) {
                 game1.selectedTargetPack(action-3);
+                if (game1.checkIfVictory()) {
+                    winGame(1);
+                    game1.quitGame();
+                    gameNum1 = 0;
+                }
             } else if (action >= 7) {
                 game1.selectedWorkingPack(action-7);
             }
@@ -420,6 +448,11 @@ public class Gameboard extends JComponent{
                 game2.selectedWaste();
             } else if (action >= 3 && action <= 6) {
                 game2.selectedTargetPack(action-3);
+                if (game2.checkIfVictory()) {
+                    winGame(2);
+                    game2.quitGame();
+                    gameNum2 = 0;
+                }
             } else if (action >= 7) {
                 game2.selectedWorkingPack(action-7);
             }
@@ -432,6 +465,11 @@ public class Gameboard extends JComponent{
                 game3.selectedWaste();
             } else if (action >= 3 && action <= 6) {
                 game3.selectedTargetPack(action-3);
+                if (game3.checkIfVictory()) {
+                    winGame(3);
+                    game3.quitGame();
+                    gameNum3 = 0;
+                }
             } else if (action >= 7) {
                 game3.selectedWorkingPack(action-7);
             }
@@ -444,6 +482,11 @@ public class Gameboard extends JComponent{
                 game4.selectedWaste();
             } else if (action >= 3 && action <= 6) {
                 game4.selectedTargetPack(action-3);
+                if (game4.checkIfVictory()) {
+                    winGame(4);
+                    game4.quitGame();
+                    gameNum4 = 0;
+                }
             } else if (action >= 7) {
                 game4.selectedWorkingPack(action-7);
             }
@@ -451,7 +494,7 @@ public class Gameboard extends JComponent{
     }
 
     /*******************************************************************************************************************
-     * This Method is only for resolving selected cards from KlondikeGame objects
+     * Metody pro vyhodnocení vybraných karet ve hře a nápovědy.
      ******************************************************************************************************************/
     private void resolveBorder(KlondikeGame gameTmp) {
         try {
@@ -469,5 +512,48 @@ public class Gameboard extends JComponent{
             selectedCard = -1;
         }
     }
+
+    /** Metoda, která zprostředkuje akci undo. */
+    public void resolveHint(KlondikeGame gameTmp) {  // TODO smazat nápovědy
+        try {
+            Hint hint1 = gameTmp.hint();
+            if (hint1 == null) {
+                //System.out.println("game1: no possible hint");
+            } else if (hint1.getSrc() == KlondikeGame.Selected.STOCK) {
+                //System.out.println("STOCK SELECTED");
+                saveHintSrc = 1;
+            } else if (hint1.getSrc() == KlondikeGame.Selected.WASTE || hint1.getSrc() == KlondikeGame.Selected.WORKING_PACK) {
+                if (hint1.getSrc() == KlondikeGame.Selected.WASTE) {
+                    saveHintSrc = 2;
+                    //System.out.println("WASTE " + hint1.getDest().toString() + "" + hint1.getDestIndex());
+                } else if (hint1.getSrc() == KlondikeGame.Selected.WORKING_PACK) {
+                    saveHintSrc = hint1.getSrcIndex() + 7;
+                    //System.out.println("WORKING PACK" + hint1.getSrcIndex() + " " + hint1.getDest().toString() + hint1.getDestIndex());
+                }
+                if (hint1.getDest() == KlondikeGame.Selected.TARGET_PACK) {
+                    saveHintDest = hint1.getDestIndex() + 3;
+                } else if (hint1.getDest() == KlondikeGame.Selected.WORKING_PACK) {
+                    saveHintDest = hint1.getDestIndex() + 7;
+                }
+            }
+        } catch (Exception e) {
+            saveHintSrc = -1;
+            saveHintDest = -1;
+        }
+    }
+
+    public static void winGame(int index)
+    {
+        String titleBar = "You win the game " + index + " !";
+        String infoMessage = "Congratulations! \n You are the winner!";
+
+        JLabel win = new JLabel(infoMessage);
+        win.setFont(new java.awt.Font("Verdana", 1, 20));
+        win.setForeground(new Color(10, 75, 130));
+
+        JOptionPane.showMessageDialog(null, win,  titleBar, JOptionPane.PLAIN_MESSAGE);
+
+    }
+
 
 }
