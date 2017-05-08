@@ -1,3 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package swingtest;
 
 import game.KlondikeGame;
@@ -8,8 +14,8 @@ import javax.swing.filechooser.*;
 
 
 /**
- * 
- * @author Jan Morávek (xmorav33), Marek Jankech (xjanke01)
+ * Třída reprezentující samotnou aplikaci, vytvoří okno aplikace a jednotlivé prvky jako menu a další.
+ * @author Jan Morávek, Marek Jankech
  */
 public class Frame extends JFrame {
     
@@ -43,11 +49,14 @@ public class Frame extends JFrame {
     Dimension pref = new Dimension(900, 5);
     Dimension max = new Dimension(1000, 5);
 
-    /*******************************************************************************************************************
+    /* ******************************************************************************************************************
      * Metody vytvářející celý vzhled aplikace jako je menu, statusbar,... Zároveň obsahuje metody pro změnu tohoto
      * okna, jako je třeba změna velikosti při více hrách.
      ******************************************************************************************************************/
-    /** Metoda obsahující hlavní prvky frontendu jako menu, statusbar,...*/
+
+    /**
+     * Metoda obsahující hlavní prvky frontendu jako menu, statusbar,...
+     */
     public Frame() {
         super("Klondike Solitaire");
 
@@ -145,7 +154,9 @@ public class Frame extends JFrame {
 
     }
 
-    /** Metoda mění velikost okna podle stavu hry.*/
+    /**
+     * Metoda mění velikost okna podle stavu hry.
+     */
     public void setFrameSize() {
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0 || gameb.gameNumber == 1) {
@@ -163,7 +174,9 @@ public class Frame extends JFrame {
         }
     }
 
-    /** Metoda mění přístupnost tlačítek podle stavu hry.*/
+    /**
+     * Metoda mění přístupnost tlačítek podle stavu hry.
+     */
     public void resolveState(){
         gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
         if (gameb.gameNumber == 0) {
@@ -212,13 +225,21 @@ public class Frame extends JFrame {
         setFrameSize();
     }
 
-    /*******************************************************************************************************************
+    /* ******************************************************************************************************************
      * Třídy pro naslouchání na tlačítkách a celé ploše hry. Využíváno pro ovládání tlačítek a samotné hry.
      ******************************************************************************************************************/
-    /** Private class implementing ActionListener*/
+
     // listener for buttons
+    /**
+     * Private class implementing ActionListener
+     */
     private class ButtonHandler extends Component implements ActionListener {
             //private KlondikeGame game1;
+
+        /**
+         * Metoda pro naslouchání kliknutí tlačítek.
+         * @param event - event tlačítka
+         */
             public void actionPerformed(ActionEvent event) {
                 if(event.getSource()==newGame) {
                     gameb.gameNumber = gameb.gameNum1 + gameb.gameNum2 + gameb.gameNum3 + gameb.gameNum4;
@@ -316,12 +337,18 @@ public class Frame extends JFrame {
         }
     }
 
-    /** Private class implementing MouseListener and MouseMotionListener.*/
+    /**
+     * Private class implementing MouseListener and MouseMotionListener.
+     */
     private class MouseHandler implements MouseListener, MouseMotionListener {
         private int xevent;
         private int yevent;
         String saveStr = "";
 
+        /**
+         * Metoda pro naslouchání zmáčknutí tlačítka myši.
+         * @param event - zmáčknutí tlačítka myši
+         */
         public void mousePressed(MouseEvent event) {
             xevent = event.getX();
             yevent = event.getY();
@@ -524,7 +551,7 @@ public class Frame extends JFrame {
                     gameb.gameMotion = true;
                 }
 
-                /** Hra je označena pro využití jednotlivých operací jako uložení, ... */
+                /* * Hra je označena pro využití jednotlivých operací jako uložení, ... */
             } else if (SwingUtilities.isRightMouseButton(event)) {
                 gameb.gameMotion = false;
                 if ((xevent > 11 && xevent < 712) && (yevent > 47 && yevent < 452)) { // game 1
@@ -574,7 +601,11 @@ public class Frame extends JFrame {
                 gameb.repaint();
 
         }
-        /** Vykresluje ohraničení hry, kde se zrovna nachází myš. */
+
+        /**
+         * Vykresluje ohraničení hry, kde se zrovna nachází myš.
+         * @param event - event myši
+         */
         public void mouseMoved(MouseEvent event) {
             if (gameb.gameMotion) {
                 xevent = event.getX();
@@ -595,65 +626,44 @@ public class Frame extends JFrame {
             }
         }
 
-        /** Nepotřebné operace myší.    */
+        /**
+         * Nepotřebná operace myší.
+         * @param event - event myši
+         */
         public void mouseClicked(MouseEvent event) {
         }
+
+        /**
+         * Nepotřebná operace myší.
+         * @param event - event myši
+         */
         public void mouseDragged(MouseEvent event) {
             if (location) {
                 setLocation(event.getXOnScreen() - posX, event.getYOnScreen() - posY);
             }
         }
+
+        /**
+         * Nepotřebná operace myší.
+         * @param event - event myši
+         */
         public void mouseReleased(MouseEvent event) {
             location = false;
         }
+
+        /**
+         * Nepotřebná operace myší.
+         * @param event - event myši
+         */
         public void mouseExited(MouseEvent event) {
         }
+
+        /**
+         * Nepotřebná operace myší.
+         * @param event - event myši
+         */
         public void mouseEntered(MouseEvent event) {
         }
 
     }
 }
- /*
-                        Object[] options = {"Game 1", "Game 2", "Game 3", "Game 4"};
-                        int choice = JOptionPane.showOptionDialog(null, //Component parentComponent
-                                "Choose where you want to create game, or which game u want to replay.",
-                                "New game.",
-                                JOptionPane.YES_NO_OPTION, //int optionType
-                                JOptionPane.INFORMATION_MESSAGE, //int messageType
-                                null, //Icon icon,
-                                options, null);
-                        if (choice == 0) {
-                            System.out.println("choice 1");
-                            gameb.newProvide(1);
-                            //if (gameb.game1 == null)
-                        } else if (choice == 1) {
-                            System.out.println("choice 2");
-                            gameb.newProvide(2);
-                        } else if (choice == 2) {
-                            gameb.newProvide(3);
-                            System.out.println("choice 3");
-                        } else if (choice == 3) {
-                            gameb.newProvide(4);
-                            System.out.println("choice 4");
-                        } */
-
-
- /*
-                header.addMouseListener(new MouseAdapter()
-                {
-                    public void mousePressed(MouseEvent e)
-                    {
-                        posX=e.getX();
-                        posY=e.getY();
-                    }
-                });
-
-                header.addMouseMotionListener(new MouseAdapter()
-                {
-                    public void mouseDragged(MouseEvent evt)
-                    {
-                        //sets frame position when mouse dragged
-                        setLocation (evt.getXOnScreen()-posX,evt.getYOnScreen()-posY);
-                    }
-                });
-                */

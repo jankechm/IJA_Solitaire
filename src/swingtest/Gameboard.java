@@ -15,8 +15,8 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Jan Morávek (xmorav33), Marek Jankech (xjanke01)
+ * Třída reprezentující hrací plochu a vykresluje jednotlivé karty.
+ * @author Jan Morávek, Marek Jankech
  */
 public class Gameboard extends JComponent{
     
@@ -46,7 +46,10 @@ public class Gameboard extends JComponent{
     private String namerino = "";
     Color blueBack = new Color(10, 75, 130);
 
-    /** Metoda volaná pomocí repaint(). Zajišťuje volání ostatních metod pro vykreslení hry*/
+    /**
+     * Metoda volaná pomocí repaint(). Zajišťuje volání ostatních metod pro vykreslení hry
+     * @param g - parametr Graphics pro vykreslení plochy
+     */
     public void paint(Graphics g) { // drawRect(x, y, width, height);
         g.setColor(blueBack);
         gameNumber = gameNum1 + gameNum2 + gameNum3 + gameNum4;
@@ -84,11 +87,17 @@ public class Gameboard extends JComponent{
     }
 
 
-    /*******************************************************************************************************************
+    /* ******************************************************************************************************************
      * Metody pro vykreslení celé hry. Obsahuje metody pro vykreslení hrací plochy, vykreslení karet, vykreslení
      * ohraničení a nápovědy.
      ******************************************************************************************************************/
-    /** Metoda vykreslující celou hrací plochu.*/
+    /**
+     * Metoda vykreslující celou hrací plochu.
+     * @param g - parametr Graphics pro vykreslení plochy
+     * @param gameTmp - parametr objektu hry pro její vykreslení
+     * @param xgap - odsazení hry na ose x
+     * @param ygap - odsazení hry na ose y
+     */
     private void drawGame (Graphics g, KlondikeGame gameTmp, int xgap, int ygap) {
         String dir = "lib/cards/";
         String back = "lib/cards/back2.jpg";
@@ -201,7 +210,12 @@ public class Gameboard extends JComponent{
             }
     }
 
-    /** Metoda vykresluje žádnou hru.*/
+    /**
+     * Metoda vykresluje žádnou hru.
+     * @param g - parametr Graphics pro vykreslení plochy
+     * @param xgap - odsazení hry na ose X
+     * @param ygap - odsazení hry na ose Y
+     */
     private void drawNoGame (Graphics g, int xgap, int ygap) {
         namerino = "";
         workgap = 30;
@@ -232,7 +246,13 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda vykresluje jednotlivé karty na zadané souřadnice. */
+    /**
+     * Metoda vykresluje jednotlivé karty na zadané souřadnice.
+     * @param g - parametr Graphics pro vykreslení plochy
+     * @param fileName - název souboru s obrázkem karty
+     * @param x - souřadnice x pro vykresslení hry
+     * @param y - souřadnice y pro vykresslení hry
+     */
     private void drawCard(Graphics g, String fileName, int x, int y)
     {
         if (fileName == "")
@@ -253,7 +273,10 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda pro vykreslení ohraničení her.*/
+    /**
+     * Metoda pro vykreslení ohraničení her.
+     * @param g - parametr Graphics pro vykreslení plochy
+     */
     public void drawGameBorder (Graphics g) {
         if (gameActive == 0) {
             g.drawRect(10,5,1407,815);
@@ -273,7 +296,12 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metody vykreslující ohraničení karty*/
+    /**
+     * Metoda vykreslující ohraničení vybrané karty.
+     * @param g - parametr Graphics pro vykreslení plochy
+     * @param x - souřadnice x pro vykresslení hry
+     * @param y - souřadnice y pro vykresslení hry
+     */
     private void drawCardBorder (Graphics g, int x, int y) {
         g.setColor(blueBack);
         g.drawRect(x, y, CWIDTH, CHEIGHT);
@@ -281,19 +309,29 @@ public class Gameboard extends JComponent{
         g.drawRect(x + 1, y + 1, CWIDTH - 2, CHEIGHT - 2);
         g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
     }
+
+    /**
+     * Metoda vykreslující ohraničení karty nápovědy.
+     * @param g - parametr Graphics pro vykreslení plochy
+     * @param x - souřadnice x pro vykresslení hry
+     * @param y - souřadnice y pro vykresslení hry
+     */
     private void drawHintBorder (Graphics g, int x, int y) {
         g.setColor(Color.yellow);
         //g.setColor(new Color (240,240,240));
         g.drawRect(x, y, CWIDTH, CHEIGHT);
 
         g.drawRect(x + 1, y + 1, CWIDTH - 2, CHEIGHT - 2);
-        g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
+        //g.drawRect(x + 2, y + 2, CWIDTH - 4, CHEIGHT - 4);
     }
 
-    /*******************************************************************************************************************
+    /* ******************************************************************************************************************
      * Metody pro přístup k instancím třídy KlondikeGame. Zároveň část problému při operacích s těmito instancemi.
      ******************************************************************************************************************/
-    /** Metoda, která zajistí vytvoření nové hry.*/
+    /**
+     * Metoda, která zajistí vytvoření nové hry.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * */
     public void newProvide(int index) {
         switch (index) {
             case 1:
@@ -327,7 +365,11 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda zajišťující nahrání hry.*/
+    /**
+     * Metoda zajišťující nahrání hry.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * @param nameFile - název souboru pro naštení hry
+     */
     public void loadProvide(int index, String nameFile) {
         quitProvide(index);
         newProvide(index);
@@ -347,7 +389,11 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda zajišťující novou hru.*/
+    /**
+     * Metoda zajišťující novou hru.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * @return název souboru do kterého byla hra uložena
+     */
     public String saveProvide(int index) {
         String fileName = "";
         switch (index) {
@@ -367,7 +413,11 @@ public class Gameboard extends JComponent{
         return fileName;
     }
 
-    /** Metoda zajišťující ukončení hry*/
+    /**
+     * Metoda zajišťující ukončení hry
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * @return vrací false, pokud se hra správně neukončila
+     */
     public boolean quitProvide(int index) {
         if (index == 1 && gameNum1 == 1) {
             game1.quitGame();
@@ -391,7 +441,12 @@ public class Gameboard extends JComponent{
         return true;
     }
 
-    /** Metoda využívaná pro získání velikosti working packu ke změně plochy pro kliknutí. */
+    /**
+     * Metoda využívaná pro získání velikosti working packu ke změně plochy pro kliknutí.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * @param i - index working packu, který chceme vrátit
+     * @return size os working pack
+    */
     public int workSizeProvide(int index, int i) {
         if (index == 1 && gameNum1 == 1) {
             return game1.getWorkingPack(i).size();
@@ -406,7 +461,10 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda, která zprostředkuje akci undo. */
+    /**
+     * Metoda, která zprostředkuje akci undo.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     */
     public void undoProvide(int index) {
         if (index == 1 && gameNum1 == 1) {
             game1.undo();
@@ -419,7 +477,11 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda zajišťující provedení operací nad instancemi her.*/
+    /**
+     * Metoda zajišťující provedení operací nad instancemi her.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     * @param action - číslo operace, kterou chceme volat
+     */
     public void actionProvide (int index, int action) {
         System.out.printf("GAME%d: action: %d\n", index, action);
         if (index == 1 && gameNum1 == 1) {
@@ -493,9 +555,14 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /*******************************************************************************************************************
+    /* ******************************************************************************************************************
      * Metody pro vyhodnocení vybraných karet ve hře a nápovědy.
      ******************************************************************************************************************/
+
+    /**
+     * Metoda pro vyhodnocení hranic hry
+     * @param gameTmp - instance třídy KlondikeGame
+     */
     private void resolveBorder(KlondikeGame gameTmp) {
         try {
             int index = gameTmp.getSelectedSourceIndex();
@@ -513,7 +580,10 @@ public class Gameboard extends JComponent{
         }
     }
 
-    /** Metoda, která zprostředkuje akci undo. */
+    /**
+     * Metoda, která zprostředkuje akci undo.
+     * @param gameTmp - instance třídy KlondikeGame
+     */
     public void resolveHint(KlondikeGame gameTmp) {  // TODO smazat nápovědy
         try {
             Hint hint1 = gameTmp.hint();
@@ -542,6 +612,10 @@ public class Gameboard extends JComponent{
         }
     }
 
+    /**
+     * Metoda zobrazující výhru hráče.
+     * @param index - číslo hry, pro kterou chceme provést operaci
+     */
     public static void winGame(int index)
     {
         String titleBar = "You win the game " + index + " !";

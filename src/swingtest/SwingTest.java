@@ -4,11 +4,9 @@ package swingtest;
 import javax.swing.*;
 
 /**
- *
- * @author Jan Morávek (xmorav33), Marek Jankech (xjanke01)
+ * Hlavní třída aplikace. Slouží pouze pro vytvoření okna aplikace a nastavení několika parametrů.
+ * @author Jan Morávek, Marek Jankech
  */
-
-
 public class SwingTest {
   public static void main(String[] a) {
     Frame frame = new Frame();
