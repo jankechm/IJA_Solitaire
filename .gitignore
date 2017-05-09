@@ -29,3 +29,5 @@ dest-client/ija-client\.jar
 test/build\.xml
 
 doc/
+
+\.idea/
