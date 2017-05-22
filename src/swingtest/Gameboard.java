@@ -494,6 +494,7 @@ public class Gameboard extends JComponent{
             } else if (action >= 3 && action <= 6) {
                 game1.selectedTargetPack(action-3);
                 if (game1.checkIfVictory()) {
+                    repaint();
                     winGame(1);
                     game1.quitGame();
                     gameNum1 = 0;
@@ -511,6 +512,7 @@ public class Gameboard extends JComponent{
             } else if (action >= 3 && action <= 6) {
                 game2.selectedTargetPack(action-3);
                 if (game2.checkIfVictory()) {
+                    repaint();
                     winGame(2);
                     game2.quitGame();
                     gameNum2 = 0;
@@ -528,6 +530,7 @@ public class Gameboard extends JComponent{
             } else if (action >= 3 && action <= 6) {
                 game3.selectedTargetPack(action-3);
                 if (game3.checkIfVictory()) {
+                    repaint();
                     winGame(3);
                     game3.quitGame();
                     gameNum3 = 0;
@@ -545,6 +548,7 @@ public class Gameboard extends JComponent{
             } else if (action >= 3 && action <= 6) {
                 game4.selectedTargetPack(action-3);
                 if (game4.checkIfVictory()) {
+                    repaint();
                     winGame(4);
                     game4.quitGame();
                     gameNum4 = 0;
